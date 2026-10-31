@@ -3,294 +3,386 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Password Strength Checker — Free Password Strength & Breach Check</title>
+<title>Password Strength Checker — Free Password Strength &amp; Breach Check</title>
 <meta name="description" content="Free password strength checker. See how strong your password is, check if it appeared in a data breach, spot reused passwords, and learn how to protect your accounts. Runs in your browser.">
 <link rel="canonical" href="https://passwordstrengthchecker.online/">
 <meta property="og:title" content="Password Strength Checker">
-<meta property="og:description" content="Check your password strength, breach status and reuse — free and private, right in your browser.">
+<meta property="og:description" content="Check your password strength, breach status and reuse, free and private, right in your browser.">
 <meta property="og:url" content="https://passwordstrengthchecker.online/">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%234f46e5'/><path d='M32 14l14 6v10c0 9-6 16-14 20-8-4-14-11-14-20V20z' fill='white'/></svg>">
+<meta name="theme-color" content="#061a3a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23061a33'/><path d='M32 12l16 6v12c0 10-7 18-16 22-9-4-16-12-16-22V18z' fill='none' stroke='%233fd0ff' stroke-width='4'/><circle cx='32' cy='30' r='4' fill='%233fd0ff'/><rect x='30' y='32' width='4' height='8' fill='%233fd0ff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
   :root {
-    --ink: #0f172a;
-    --muted: #475569;
-    --line: #e2e8f0;
-    --bg: #f8fafc;
-    --indigo: #4f46e5;
-    --violet: #7c3aed;
-    --teal: #0d9488;
-    --amber: #d97706;
-    --rose: #e11d48;
-    --green: #16a34a;
+    --navy-900: #04122a;
+    --navy-800: #061a3a;
+    --navy-700: #0a2650;
+    --navy-600: #10336a;
+    --line: #1a4280;
+    --cyan: #3fd0ff;
+    --cyan-soft: rgba(63,208,255,0.14);
+    --ice: #e8f2ff;
+    --muted: #93abcc;
+    --ok: #3ddc97;
+    --warn: #ffc857;
+    --bad: #ff6b7a;
   }
   * { box-sizing: border-box; }
+  html { background: var(--navy-800); }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-    background: var(--bg);
-    color: var(--ink);
+    font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', Arial, sans-serif;
+    font-size: 17px;
     line-height: 1.6;
+    color: var(--ice);
+    background:
+      radial-gradient(1200px 600px at 75% -10%, rgba(63,208,255,0.10), transparent 60%),
+      var(--navy-800);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    background-repeat: no-repeat;
   }
-  a { color: var(--indigo); }
+  a { color: var(--cyan); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--cyan); outline-offset: 2px;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
-  /* ---------- Header ---------- */
-  header.site {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--line);
-  }
-  .nav {
-    max-width: 1080px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  }
-  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; }
-  .brand-mark {
-    width: 32px; height: 32px; border-radius: 9px;
-    background: linear-gradient(135deg, var(--indigo), var(--teal));
-    display: grid; place-items: center;
-  }
-  .nav-links { display: flex; gap: 22px; font-size: 14px; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; }
-  .nav-links a:hover { color: var(--indigo); }
+  /* Header */
+  header.site { border-bottom: 1px solid rgba(26,66,128,0.6); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .brand { display: flex; align-items: center; gap: 12px; color: var(--ice); text-decoration: none; font-weight: 600; font-size: 17px; letter-spacing: -0.01em; }
+  .nav-links { display: flex; gap: 32px; font-size: 15px; }
+  .nav-links a { color: var(--muted); text-decoration: none; }
+  .nav-links a:hover, .nav-links a[aria-current] { color: var(--ice); }
 
-  /* ---------- Hero ---------- */
-  .hero {
-    background: linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #0d9488 100%);
-    color: white;
-    padding: 64px 20px 140px;
-    text-align: center;
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 56px; }
+  .hero h1 { font-size: clamp(38px, 5.2vw, 60px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 22px; }
+  .hero p.lead { font-size: 19px; color: var(--muted); max-width: 30em; margin: 0 0 32px; }
+  .btn {
+    display: inline-block; background: var(--cyan); color: var(--navy-900); font-weight: 600;
+    padding: 14px 26px; border-radius: 8px; text-decoration: none; font-size: 16px; border: none; cursor: pointer;
+    font-family: inherit;
   }
-  .hero .eyebrow {
-    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; background: rgba(255,255,255,0.15);
-    padding: 6px 12px; border-radius: 999px; margin-bottom: 16px;
-  }
-  .hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 0 14px; }
-  .hero p { font-size: 18px; max-width: 620px; margin: 0 auto; color: rgba(255,255,255,0.88); }
-  .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
-  .badge {
-    font-size: 13px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
-    padding: 6px 12px; border-radius: 999px;
-  }
+  .btn:hover { background: #7fe0ff; }
+  .hero-note { margin-top: 18px; font-size: 14px; color: var(--muted); }
+  .hero-art { width: 100%; height: auto; display: block; }
+  .trace { stroke-dasharray: 6 220; animation: pulse 4.5s linear infinite; }
+  .trace.d2 { animation-delay: -1.5s; } .trace.d3 { animation-delay: -3s; }
+  @keyframes pulse { from { stroke-dashoffset: 226; } to { stroke-dashoffset: 0; } }
+  @media (prefers-reduced-motion: reduce) { .trace { animation: none; stroke-dasharray: none; opacity: 0.25; } html { scroll-behavior: auto; } }
 
-  /* ---------- Tool cards (dark, as before) ---------- */
-  .tool-wrap {
-    max-width: 1080px; margin: -100px auto 0; padding: 0 20px;
-    display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: start;
-  }
+  /* Tool panels */
+  .tool { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; padding-bottom: 32px; }
   .card {
-    background: #1a1d24;
-    color: #e6e6e6;
-    border-radius: 16px;
-    padding: 28px;
-    box-shadow: 0 20px 40px rgba(15,23,42,0.25);
+    background: linear-gradient(180deg, var(--navy-700), var(--navy-800));
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 0 0 1px rgba(63,208,255,0.04) inset, 0 30px 60px -30px rgba(0,0,0,0.6);
   }
-  .card h2.tool-title { font-size: 20px; margin: 0 0 6px 0; color: #fff; }
-  .card h2 { font-size: 18px; margin: 0 0 8px 0; color: #fff; }
-  p.sub { font-size: 13px; color: #9aa0aa; margin: 0 0 18px 0; line-height: 1.5; }
+  .card h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  p.sub { font-size: 14px; color: var(--muted); margin: 0 0 20px; line-height: 1.55; }
   .card input {
-    width: 100%;
-    padding: 12px 14px;
-    font-size: 15px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #0f1115;
-    color: #e6e6e6;
-    margin-bottom: 8px;
+    width: 100%; padding: 14px 16px; font-size: 16px; font-family: 'IBM Plex Mono', monospace;
+    border-radius: 8px; border: 1px solid var(--line); background: var(--navy-900); color: var(--ice); margin-bottom: 8px;
   }
-  .card input:focus { outline: none; border-color: #818cf8; }
-  .bar-track {
-    width: 100%; height: 10px; background: #2a2d35;
-    border-radius: 5px; margin-top: 16px; overflow: hidden;
-  }
-  .bar-fill {
-    height: 100%; width: 0%; background: #c0392b;
-    transition: width 0.2s ease, background 0.2s ease;
-  }
-  .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; }
-  .label { font-weight: 600; font-size: 15px; }
-  .entropy { font-size: 12px; color: #888; }
-  .section-title {
-    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
-    color: #8b8f99; margin: 20px 0 8px 0;
-  }
-  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 13px; }
-  .check { color: #6b6f78; }
-  .check.met { color: #4caf50; }
-  ul.feedback { margin: 14px 0 0 0; padding-left: 18px; font-size: 13px; color: #aaa; line-height: 1.6; }
+  .card input::placeholder { font-family: 'IBM Plex Sans', sans-serif; color: #5f7aa0; }
+  .card input:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-soft); }
+  .bar-track { width: 100%; height: 8px; background: var(--navy-900); border-radius: 4px; margin-top: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; background: #c0392b; transition: width 0.25s ease, background 0.25s ease; }
+  .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; }
+  .label { font-weight: 600; font-size: 16px; }
+  .entropy { font-size: 13px; color: var(--muted); }
+  .section-title { font-size: 14px; font-weight: 600; color: var(--ice); margin: 24px 0 10px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 14px; }
+  .check { color: #6683ab; }
+  .check.met { color: var(--ok); }
+  ul.feedback { margin: 16px 0 0; padding-left: 18px; font-size: 14px; color: var(--muted); line-height: 1.6; }
   ul.feedback li { margin-bottom: 4px; }
   .row { display: flex; gap: 8px; margin-bottom: 8px; }
   .row input { margin-bottom: 0; }
-  .row input.platform { flex: 1; }
+  .row input.platform { flex: 1; font-family: 'IBM Plex Sans', sans-serif; }
   .row input.pw { flex: 1.4; }
   .card button {
-    background: #2a2d35; color: #e6e6e6; border: 1px solid #3a3d45;
-    border-radius: 8px; padding: 10px 16px; font-size: 13px;
-    cursor: pointer; margin-top: 6px;
+    background: transparent; color: var(--cyan); border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px 16px; font-size: 14px; font-family: inherit; cursor: pointer; margin-top: 6px;
   }
-  .card button:hover { background: #34373f; }
-  .reuse-result { margin-top: 14px; font-size: 13px; padding: 10px 12px; border-radius: 8px; }
-  .reuse-warn { background: #3a2020; color: #f5a3a3; }
-  .breach-status { margin-top: 16px; font-size: 13px; padding: 12px; border-radius: 8px; }
-  .breach-checking { background: #2a2d35; color: #aaa; }
-  .breach-safe { background: #1f3320; color: #8fd98f; }
-  .breach-found { background: #3a2020; color: #f5a3a3; }
-  .breach-error { background: #332a1f; color: #e2b93b; }
-  .privacy-note {
-    margin-top: 18px; padding: 14px 16px; border-radius: 12px;
-    background: #eef2ff; color: #3730a3; font-size: 13px; line-height: 1.5;
-  }
-  .privacy-note strong { display: block; margin-bottom: 2px; }
+  .card button:hover { border-color: var(--cyan); }
+  .reuse-result { margin-top: 14px; font-size: 14px; padding: 12px 14px; border-radius: 8px; }
+  .reuse-warn { background: rgba(255,107,122,0.12); color: #ffb3bb; border: 1px solid rgba(255,107,122,0.3); }
+  .breach-status { margin-top: 4px; font-size: 14px; padding: 13px 14px; border-radius: 8px; border: 1px solid transparent; }
+  .breach-checking { background: var(--navy-900); color: var(--muted); border-color: var(--line); }
+  .breach-safe { background: rgba(61,220,151,0.10); color: #9af0c8; border-color: rgba(61,220,151,0.3); }
+  .breach-found { background: rgba(255,107,122,0.12); color: #ffb3bb; border-color: rgba(255,107,122,0.3); }
+  .breach-error { background: rgba(255,200,87,0.10); color: var(--warn); border-color: rgba(255,200,87,0.3); }
+  .privacy { margin-top: 24px; padding: 0 4px; font-size: 14px; color: var(--muted); }
+  .privacy strong { color: var(--ice); font-weight: 600; }
 
-  /* ---------- Info sections ---------- */
-  section.info { max-width: 1080px; margin: 0 auto; padding: 72px 20px 0; }
-  .section-head { text-align: center; max-width: 640px; margin: 0 auto 36px; }
-  .kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
-  .section-head h2 { font-size: clamp(24px, 3.5vw, 32px); margin: 6px 0 10px; line-height: 1.2; }
-  .section-head p { color: var(--muted); margin: 0; }
+  /* Content */
+  .band { padding-top: 96px; }
+  .band h2.head { font-size: clamp(28px, 3.6vw, 40px); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 14px; max-width: 18em; }
+  .band p.intro { color: var(--muted); max-width: 36em; margin: 0 0 44px; font-size: 18px; }
 
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .stat {
-    background: white; border: 1px solid var(--line); border-radius: 16px; padding: 22px;
-  }
-  .stat .big { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-  .stat p { margin: 0; color: var(--muted); font-size: 14px; }
-  .stat.c1 .big { color: var(--rose); }
-  .stat.c2 .big { color: var(--amber); }
-  .stat.c3 .big { color: var(--indigo); }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+  .fact { padding: 28px 28px 0 0; }
+  .fact + .fact { padding-left: 28px; border-left: 1px solid var(--line); }
+  .fact h3 { margin: 0 0 8px; font-size: 19px; color: var(--cyan); font-weight: 600; }
+  .fact p { margin: 0; color: var(--muted); font-size: 15px; }
 
-  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .tip {
-    background: white; border: 1px solid var(--line); border-radius: 16px; padding: 22px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-  }
-  .tip:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(15,23,42,0.08); }
-  .icon {
-    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
-    font-size: 22px; margin-bottom: 14px;
-  }
-  .tip h3 { margin: 0 0 6px; font-size: 17px; }
-  .tip p { margin: 0; color: var(--muted); font-size: 14px; }
-  .i-indigo { background: #eef2ff; }
-  .i-teal { background: #ccfbf1; }
-  .i-amber { background: #fef3c7; }
-  .i-rose { background: #ffe4e6; }
-  .i-violet { background: #ede9fe; }
-  .i-green { background: #dcfce7; }
+  table.compare { width: 100%; border-collapse: collapse; font-size: 15px; }
+  table.compare th { text-align: left; font-weight: 600; padding: 0 16px 14px 0; color: var(--ice); border-bottom: 1px solid var(--line); }
+  table.compare td { padding: 16px 16px 16px 0; border-bottom: 1px solid rgba(26,66,128,0.55); color: var(--muted); vertical-align: top; }
+  table.compare code { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--ice); }
+  .tag { font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+  .tag.weak { color: #ffb3bb; background: rgba(255,107,122,0.12); }
+  .tag.strong { color: #9af0c8; background: rgba(61,220,151,0.10); }
 
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  .ex { border-radius: 16px; padding: 22px; }
-  .ex.bad { background: #fff1f2; border: 1px solid #fecdd3; }
-  .ex.good { background: #f0fdf4; border: 1px solid #bbf7d0; }
-  .ex h3 { margin: 0 0 12px; font-size: 16px; }
-  .ex.bad h3 { color: var(--rose); }
-  .ex.good h3 { color: var(--green); }
-  .ex ul { margin: 0; padding: 0; list-style: none; }
-  .ex li { padding: 8px 0; border-top: 1px dashed rgba(15,23,42,0.1); font-size: 14px; color: var(--muted); }
-  .ex li:first-child { border-top: none; }
-  .ex code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
-    background: white; padding: 2px 8px; border-radius: 6px; color: var(--ink); margin-right: 6px;
-  }
+  .habits { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .habit { padding: 24px 0; border-top: 1px solid var(--line); }
+  .habit h3 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .habit p { margin: 0; color: var(--muted); font-size: 15px; max-width: 34em; }
 
-  .steps { counter-reset: s; display: grid; gap: 14px; max-width: 760px; margin: 0 auto; }
-  .step {
-    counter-increment: s; background: white; border: 1px solid var(--line); border-radius: 14px;
-    padding: 18px 20px 18px 70px; position: relative;
+  .split { display: grid; grid-template-columns: 1fr 1.3fr; gap: 64px; align-items: start; }
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 26px 56px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 0; top: -2px; width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--cyan); color: var(--cyan); display: grid; place-items: center; font-weight: 600; font-size: 15px;
   }
-  .step::before {
-    content: counter(s); position: absolute; left: 20px; top: 18px;
-    width: 34px; height: 34px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--indigo), var(--teal));
-    color: white; font-weight: 700; display: grid; place-items: center;
-  }
-  .step h3 { margin: 0 0 4px; font-size: 16px; }
-  .step p { margin: 0; color: var(--muted); font-size: 14px; }
+  ol.steps li:not(:last-child)::after { content: ""; position: absolute; left: 17px; top: 36px; bottom: 4px; width: 1px; background: var(--line); }
+  ol.steps h3 { margin: 0 0 4px; font-size: 17px; font-weight: 600; }
+  ol.steps p { margin: 0; color: var(--muted); font-size: 15px; }
 
-  .faq { max-width: 760px; margin: 0 auto; }
-  details {
-    background: white; border: 1px solid var(--line); border-radius: 14px;
-    padding: 16px 20px; margin-bottom: 12px;
-  }
-  summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: "+"; color: var(--indigo); font-size: 20px; line-height: 1; }
-  details[open] summary::after { content: "–"; }
-  details p { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+  .faq details { border-top: 1px solid var(--line); padding: 20px 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; color: var(--cyan); font-size: 22px; line-height: 1; font-weight: 400; }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq details p { color: var(--muted); font-size: 15px; margin: 12px 0 0; max-width: 46em; }
 
-  .cta {
-    max-width: 1080px; margin: 72px auto 0; padding: 0 20px;
-  }
-  .cta-box {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;
-    border-radius: 20px; padding: 36px; text-align: center;
-  }
-  .cta-box h2 { margin: 0 0 8px; font-size: 26px; }
-  .cta-box p { margin: 0 0 20px; color: rgba(255,255,255,0.88); }
-  .cta-box a {
-    display: inline-block; background: white; color: var(--indigo); font-weight: 700;
-    padding: 12px 22px; border-radius: 10px; text-decoration: none;
-  }
+  .closing { margin-top: 112px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    background: radial-gradient(600px 220px at 50% 0%, rgba(63,208,255,0.12), transparent 70%); }
+  .closing .wrap { padding-top: 64px; padding-bottom: 64px; text-align: center; }
+  .closing h2 { font-size: clamp(26px, 3.4vw, 36px); margin: 0 0 12px; letter-spacing: -0.02em; }
+  .closing p { color: var(--muted); margin: 0 0 28px; }
 
-  footer {
-    margin-top: 72px; background: #0f172a; color: #94a3b8; font-size: 14px;
-  }
-  .foot {
-    max-width: 1080px; margin: 0 auto; padding: 32px 20px;
-    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
-  }
-  footer a { color: #c7d2fe; }
+  footer { padding: 32px 0 40px; font-size: 14px; color: var(--muted); }
+  .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--ice); }
 
-  @media (max-width: 860px) {
-    .tool-wrap, .compare { grid-template-columns: 1fr; }
-    .grid-3, .stats { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-    .hero { padding: 48px 20px 120px; }
+
+
+  /* Off-white checker panels */
+  .tool .card {
+    --ice: #0b1f3f; --muted: #4b5f7c; --line: #cfd9e6; --cyan: #0a74b8; --navy-900: #ffffff;
+    background: #e9eef5; color: var(--ice);
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 0 1px rgba(63,208,255,0.25), 0 30px 60px -28px rgba(0,0,0,0.7);
+  }
+  .tool .card input::placeholder { color: #8193ad; }
+  .tool .bar-track { background: #cfd9e6; }
+  .tool .check { color: #8193ad; }
+  .tool .check.met { color: #157347; }
+  .tool .card button { color: #0b1f3f; border-color: #b9c7d8; background: #ffffff; }
+  .tool .card button:hover { border-color: #0b1f3f; }
+  .tool .breach-safe { background: #e3f6ec; color: #157347; border-color: #b7e4cb; }
+  .tool .breach-found, .tool .reuse-warn { background: #fde8eb; color: #b42335; border-color: #f5c2ca; }
+  .tool .breach-error { background: #fff4dc; color: #8a5a00; border-color: #f2d79a; }
+
+  /* Light sections */
+  .light {
+    --ice: #0b1f3f; --muted: #4b5f7c; --line: #d6e0ec; --cyan: #0a74b8; --gold: #b7791f;
+    background: #ffffff; color: var(--ice);
+  }
+  .light.alt { background: #f2f5f9; }
+  .light .band { padding-top: 88px; padding-bottom: 88px; }
+  .light .fact h3 { color: var(--gold); }
+  .light .tag.weak { color: #b42335; background: #fde8eb; }
+  .light .tag.strong { color: #157347; background: #e3f6ec; }
+  .light ol.steps li::before { border-color: var(--gold); color: var(--gold); background: #fff; }
+  .light .faq summary::after { color: var(--gold); }
+  .light a { color: var(--cyan); }
+  .gold-rule { width: 48px; height: 3px; background: #e0a526; border-radius: 2px; margin: 0 0 22px; }
+  .closing { margin-top: 0 !important; border-top: none; }
+  .light .card { background: #ffffff; border-color: var(--line); box-shadow: 0 24px 48px -28px rgba(11,31,63,0.25); }
+  .light .form-card input, .light .form-card select, .light .form-card textarea { background: #f7f9fc; color: var(--ice); }
+  .light .contact { padding-bottom: 88px; }
+  .light .card .btn { background: #0b1f3f; color: #ffffff; }
+  .light .card .btn:hover { background: #163a6e; }
+  .light .form-msg.ok { color: #157347; background: #e3f6ec; }
+  .light .form-msg.err { color: #b42335; background: #fde8eb; }
+
+  /* Contact */
+  .contact { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; padding-top: 80px; padding-bottom: 40px; align-items: start; }
+  .contact h1 { font-size: clamp(36px, 4.6vw, 52px); letter-spacing: -0.03em; line-height: 1.08; margin: 0 0 18px; }
+  .contact p.lead { color: var(--muted); font-size: 18px; margin: 0 0 20px; max-width: 26em; }
+  .form-card label { display: block; font-size: 14px; font-weight: 600; margin: 0 0 8px; }
+  .form-card label span { font-weight: 400; color: var(--muted); }
+  .form-card .field { margin-bottom: 20px; }
+  .form-card input, .form-card select, .form-card textarea {
+    width: 100%; padding: 13px 15px; font-size: 16px; font-family: inherit;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--navy-900); color: var(--ice);
+  }
+  .form-card textarea { min-height: 160px; resize: vertical; }
+  .form-card input:focus, .form-card select:focus, .form-card textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px var(--cyan-soft); }
+  .card .btn { width: 100%; background: var(--cyan); color: var(--navy-900); border: none; padding: 14px 26px; font-size: 16px; font-weight: 600; margin-top: 0; }
+  .card .btn:hover { background: #7fe0ff; }
+  .form-card .btn:disabled { opacity: 0.6; cursor: default; }
+  .form-msg { margin-top: 16px; padding: 12px 14px; border-radius: 8px; font-size: 14px; display: none; }
+  .form-msg.ok { display: block; background: rgba(61,220,151,0.10); color: #9af0c8; border: 1px solid rgba(61,220,151,0.3); }
+  .form-msg.err { display: block; background: rgba(255,107,122,0.12); color: #ffb3bb; border: 1px solid rgba(255,107,122,0.3); }
+  .hp { display: none; }
+  .small-note { font-size: 13px; color: var(--muted); margin: 14px 0 0; }
+
+  @media (max-width: 900px) {
+    .hero, .tool, .split, .contact { grid-template-columns: 1fr; }
+    .hero { padding-top: 40px; padding-bottom: 32px; gap: 24px; }
+    .hero-art { max-width: 520px; margin: 0 auto; }
+    .habits { grid-template-columns: 1fr; }
+    .facts { grid-template-columns: 1fr; }
+    .fact, .fact + .fact { padding: 22px 0; border-left: none; }
+    .fact + .fact { border-top: 1px solid var(--line); }
+    .nav-links { gap: 18px; }
+    .nav-links a.hide-sm { display: none; }
+    .band { padding-top: 72px; }
+    .contact { padding-top: 48px; gap: 32px; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    .card { padding: 22px; }
+    .brand { font-size: 15px; gap: 8px; }
+    .nav-links a.hide-xs { display: none; }
+    .hero-art { max-width: 360px; }
+    .checks { grid-template-columns: 1fr; }
+    table.compare th:nth-child(3), table.compare td:nth-child(3) { display: none; }
   }
 </style>
-</head>
-<body>
 
+</head>
+<body id="top">
 <header class="site">
-  <nav class="nav">
-    <a class="brand" href="#">
-      <span class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2l8 3.5V11c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5.5z"/></svg>
-      </span>
-      Password Strength Checker
-    </a>
+  <nav class="nav wrap" aria-label="Main">
+    <a class="brand" href="#top"><svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6l20 7.5v15c0 13-9 23.5-20 28.5C21 52 12 41.5 12 28.5v-15z" fill="none" stroke="#3fd0ff" stroke-width="3.5"/><circle cx="32" cy="27" r="5" fill="#3fd0ff"/><rect x="29.5" y="29" width="5" height="11" rx="1.5" fill="#3fd0ff"/></svg>Password Strength Checker</a>
     <div class="nav-links">
-      <a href="#checker">Checker</a>
-      <a href="#why">Why it matters</a>
-      <a href="#tips">Protect yourself</a>
-      <a href="#faq">FAQ</a>
+      <a class="hide-xs" href="#checker">Checker</a>
+      <a class="hide-sm" href="#protect">Protect yourself</a>
+      <a class="hide-sm" href="#faq">FAQ</a>
       <a href="contact.html">Contact</a>
     </div>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="eyebrow">Free · Private · No sign-up</div>
-  <h1>How strong is your password?</h1>
-  <p>Check its strength, see whether it has shown up in a data breach, and find out if you're reusing it, all in your browser.</p>
-  <div class="badges">
-    <span class="badge">🔒 Your password stays on your device</span>
-    <span class="badge">⚡ Instant results</span>
-    <span class="badge">🛡️ Breach check by Have I Been Pwned</span>
+<main>
+<section class="wrap hero">
+  <div>
+    <h1>Know how strong your password really is.</h1>
+    <p class="lead">Test a password's strength, find out if it has appeared in a known data breach, and catch passwords you've reused. Everything runs privately in your browser.</p>
+    <a class="btn" href="#checker">Check a password</a>
+    <p class="hero-note">Free to use. Nothing you type is stored.</p>
+  </div>
+  <div>
+    <svg class="hero-art" viewBox="0 0 600 400" role="img" aria-label="Glowing shield with a keyhole at the center of a circuit network">
+<defs>
+  <radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#3fd0ff" stop-opacity="0.35"/><stop offset="1" stop-color="#3fd0ff" stop-opacity="0"/></radialGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<circle cx="300" cy="200" r="190" fill="url(#core)"/>
+<g fill="none" stroke="#3fd0ff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+<path d="M196,200 L120,200 L100,180 L30,180" opacity="0.45"/>
+<path d="M404,200 L480,200 L500,180 L570,180" opacity="0.45"/>
+<path d="M204,165 L150,165 L128,140 L60,140" opacity="0.45"/>
+<path d="M396,165 L450,165 L472,140 L540,140" opacity="0.45"/>
+<path d="M204,235 L150,235 L128,260 L60,260" opacity="0.45"/>
+<path d="M396,235 L450,235 L472,260 L540,260" opacity="0.45"/>
+<path d="M225,128 L190,128 L168,104 L110,104" opacity="0.45"/>
+<path d="M375,128 L410,128 L432,104 L490,104" opacity="0.45"/>
+<path d="M225,272 L190,272 L168,296 L110,296" opacity="0.45"/>
+<path d="M375,272 L410,272 L432,296 L490,296" opacity="0.45"/>
+<path d="M196,200 L160,200 L140,220 L40,220" opacity="0.45"/>
+<path d="M404,200 L440,200 L460,220 L560,220" opacity="0.45"/>
+</g>
+<g fill="none" stroke="#bff0ff" stroke-width="2.2" stroke-linecap="round" filter="url(#glow)">
+<path class="trace d1" d="M196,200 L120,200 L100,180 L30,180"/>
+<path class="trace d2" d="M404,200 L480,200 L500,180 L570,180"/>
+<path class="trace d3" d="M204,165 L150,165 L128,140 L60,140"/>
+<path class="trace d1" d="M396,165 L450,165 L472,140 L540,140"/>
+<path class="trace d2" d="M204,235 L150,235 L128,260 L60,260"/>
+<path class="trace d3" d="M396,235 L450,235 L472,260 L540,260"/>
+<path class="trace d1" d="M225,128 L190,128 L168,104 L110,104"/>
+<path class="trace d2" d="M375,128 L410,128 L432,104 L490,104"/>
+<path class="trace d3" d="M225,272 L190,272 L168,296 L110,296"/>
+<path class="trace d1" d="M375,272 L410,272 L432,296 L490,296"/>
+<path class="trace d2" d="M196,200 L160,200 L140,220 L40,220"/>
+<path class="trace d3" d="M404,200 L440,200 L460,220 L560,220"/>
+</g>
+<g fill="#3fd0ff" filter="url(#glow)">
+<rect x="26" y="176" width="8" height="8" rx="1.5"/>
+<rect x="566" y="176" width="8" height="8" rx="1.5"/>
+<rect x="56" y="136" width="8" height="8" rx="1.5"/>
+<rect x="536" y="136" width="8" height="8" rx="1.5"/>
+<rect x="56" y="256" width="8" height="8" rx="1.5"/>
+<rect x="536" y="256" width="8" height="8" rx="1.5"/>
+<rect x="106" y="100" width="8" height="8" rx="1.5"/>
+<rect x="486" y="100" width="8" height="8" rx="1.5"/>
+<rect x="106" y="292" width="8" height="8" rx="1.5"/>
+<rect x="486" y="292" width="8" height="8" rx="1.5"/>
+<rect x="36" y="216" width="8" height="8" rx="1.5"/>
+<rect x="556" y="216" width="8" height="8" rx="1.5"/>
+</g>
+<g fill="none" stroke="#3fd0ff" stroke-width="1.6" opacity="0.35">
+<path d="M22,312 l6,6 -6,6"/>
+<path d="M578,76 l-6,6 6,6"/>
+<path d="M35,312 l6,6 -6,6"/>
+<path d="M565,76 l-6,6 6,6"/>
+<path d="M48,312 l6,6 -6,6"/>
+<path d="M552,76 l-6,6 6,6"/>
+<path d="M61,312 l6,6 -6,6"/>
+<path d="M539,76 l-6,6 6,6"/>
+<path d="M74,312 l6,6 -6,6"/>
+<path d="M526,76 l-6,6 6,6"/>
+</g>
+
+<g fill="none" stroke="#3fd0ff">
+  <circle cx="300" cy="200" r="104" stroke-width="1" opacity="0.35"/>
+  <circle cx="300" cy="200" r="92" stroke-width="2" opacity="0.8" stroke-dasharray="44 10" filter="url(#glow)"/>
+  <circle cx="300" cy="200" r="78" stroke-width="1" opacity="0.4"/>
+  <circle cx="300" cy="200" r="66" stroke-width="1.2" opacity="0.55" stroke-dasharray="2 6"/>
+</g>
+<g fill="#3fd0ff" filter="url(#glow)">
+<rect x="381.5" y="231.7" width="7" height="7" rx="1.2"/>
+<rect x="331.7" y="281.5" width="7" height="7" rx="1.2"/>
+<rect x="261.3" y="281.5" width="7" height="7" rx="1.2"/>
+<rect x="211.5" y="231.7" width="7" height="7" rx="1.2"/>
+<rect x="211.5" y="161.3" width="7" height="7" rx="1.2"/>
+<rect x="261.3" y="111.5" width="7" height="7" rx="1.2"/>
+<rect x="331.7" y="111.5" width="7" height="7" rx="1.2"/>
+<rect x="381.5" y="161.3" width="7" height="7" rx="1.2"/>
+</g>
+
+<path d="M300 148 l40 15 v28 c0 25 -17 44 -40 54 c-23 -10 -40 -29 -40 -54 v-28 z" fill="#3fd0ff" opacity="0.18" filter="url(#soft)"/>
+<path d="M300 148 l40 15 v28 c0 25 -17 44 -40 54 c-23 -10 -40 -29 -40 -54 v-28 z" fill="#0a2650" stroke="#7fe0ff" stroke-width="2.4" filter="url(#glow)"/>
+<path d="M300 160 l29 11 v21 c0 18 -12 32 -29 40 c-17 -8 -29 -22 -29 -40 v-21 z" fill="none" stroke="#3fd0ff" stroke-width="1" opacity="0.5"/>
+<circle cx="300" cy="190" r="9" fill="#bff0ff" filter="url(#glow)"/>
+<path d="M295 194 h10 l3 22 h-16 z" fill="#bff0ff" filter="url(#glow)"/>
+</svg>
   </div>
 </section>
 
-<div class="tool-wrap" id="checker">
+<section class="wrap tool" id="checker" aria-label="Password checker">
 
-<div>
 <div class="card">
-  <h2 class="tool-title">Password Strength Checker</h2>
+  <h2>Password Strength Checker</h2>
   <p class="sub">Checks character variety, real weak patterns (sequential runs, repeated characters, keyboard walks), and estimated entropy.</p>
 
-  <input type="text" id="pw" placeholder="Type a password to check it..." autocomplete="off">
+  <input type="text" id="pw" placeholder="Type a password to check it..." autocomplete="off" aria-label="Password to check">
 
   <div class="bar-track"><div class="bar-fill" id="bar"></div></div>
   <div class="label-row">
@@ -318,9 +410,8 @@
   <ul class="feedback" id="feedback"></ul>
 
   <div class="section-title">Public breach check</div>
-  <p class="sub" style="margin-top:-6px;">Checks this password against the "Have I Been Pwned" database of known breached passwords. Only the first 5 characters of a hash are sent — your actual password never leaves your browser. Requires an internet connection.</p>
+  <p class="sub">Checks this password against the "Have I Been Pwned" database of known breached passwords. Only the first 5 characters of a hash are sent — your actual password never leaves your browser. Requires an internet connection.</p>
   <div class="breach-status breach-checking" id="breach-status">Type a password above to check.</div>
-</div>
 </div>
 
 <div>
@@ -333,159 +424,109 @@
 
   <div id="reuse-result"></div>
 </div>
-<div class="privacy-note">
-  <strong>🔒 Private by design</strong>
-  Nothing you type is saved or sent to us. Close the tab and it's gone.
-</div>
+<p class="privacy"><strong>Private by design.</strong> Nothing you type is saved or sent to us. Close the tab and it's gone.</p>
 </div>
 
+</section>
+
+<div class="light"><section class="wrap band">
+  <div class="gold-rule"></div><h2 class="head">Your password is the front door to your accounts</h2>
+  <p class="intro">Email, banking, social media and work accounts often depend on a single password. A weak or reused one is the easiest way in.</p>
+  <div class="facts">
+    <div class="fact"><h3>Billions leaked</h3><p>Real passwords from past data breaches are public, and attackers try them first.</p></div>
+    <div class="fact"><h3>Cracked in seconds</h3><p>Short or common passwords like "password123" fall almost instantly to automated guessing.</p></div>
+    <div class="fact"><h3>One leak, many accounts</h3><p>Reuse a password and a single breach can unlock every account that shares it.</p></div>
+  </div>
+</section>
 </div>
 
-<section class="info" id="why">
-  <div class="section-head">
-    <div class="kicker">Why it matters</div>
-    <h2>Your password is the front door to your life online</h2>
-    <p>Email, bank, social media and work accounts often hang on a single password. Here's why a weak one is risky.</p>
-  </div>
-  <div class="stats">
-    <div class="stat c1">
-      <div class="big">Billions</div>
-      <p>of real passwords have leaked in data breaches. Attackers try these first.</p>
-    </div>
-    <div class="stat c2">
-      <div class="big">Seconds</div>
-      <p>is all it takes a computer to guess a short or common password like "password123".</p>
-    </div>
-    <div class="stat c3">
-      <div class="big">One leak</div>
-      <p>can unlock every account where you reused the same password.</p>
-    </div>
+<div class="light alt"><section class="wrap band">
+  <div class="gold-rule"></div><h2 class="head">Weak and strong passwords, side by side</h2>
+  <p class="intro">Length matters more than complexity. A long, random phrase is far harder to crack than a short word dressed up with symbols.</p>
+  <table class="compare">
+    <thead><tr><th>Example</th><th>Rating</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><code>password1</code></td><td><span class="tag weak">Weak</span></td><td>One of the most leaked passwords in the world</td></tr>
+      <tr><td><code>qwerty123</code></td><td><span class="tag weak">Weak</span></td><td>Keyboard pattern followed by a number run</td></tr>
+      <tr><td><code>Sarah1997!</code></td><td><span class="tag weak">Weak</span></td><td>A name and birth year are easy to guess</td></tr>
+      <tr><td><code>Maple-River-Jacket-42</code></td><td><span class="tag strong">Strong</span></td><td>Long passphrase of unrelated words</td></tr>
+      <tr><td><code>t7#Kq!m2Vz9@Lp</code></td><td><span class="tag strong">Strong</span></td><td>Random and 14 characters long</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<div class="light"><section class="wrap band" id="protect">
+  <div class="gold-rule"></div><h2 class="head">Six habits that keep your accounts safe</h2>
+  <p class="intro">A strong password is the start. These habits close the gaps attackers use most.</p>
+  <div class="habits">
+    <div class="habit"><h3>Make it long</h3><p>Use at least 12 characters, ideally 16 or more. Four random words make a passphrase that is long and easy to remember.</p></div>
+    <div class="habit"><h3>Use a different password everywhere</h3><p>If one site is breached, attackers try the same email and password on banks, email and social media.</p></div>
+    <div class="habit"><h3>Let a password manager do the work</h3><p>It creates and remembers a unique password for every account, so you only need to remember one.</p></div>
+    <div class="habit"><h3>Turn on two-factor authentication</h3><p>An authenticator app or security key stops an attacker even if your password leaks.</p></div>
+    <div class="habit"><h3>Don't log in from links</h3><p>Phishing emails and texts copy real login pages. Type the site's address yourself instead.</p></div>
+    <div class="habit"><h3>Act quickly after a breach</h3><p>When a service you use is breached, change that password, and any others that match it, right away.</p></div>
   </div>
 </section>
+</div>
 
-<section class="info">
-  <div class="section-head">
-    <div class="kicker">Spot the difference</div>
-    <h2>Weak vs. strong passwords</h2>
-    <p>Length beats complexity. A long, random phrase is far harder to crack than a short word with symbols.</p>
-  </div>
-  <div class="compare">
-    <div class="ex bad">
-      <h3>✗ Easy to crack</h3>
-      <ul>
-        <li><code>password1</code> One of the most leaked passwords</li>
-        <li><code>qwerty123</code> Keyboard pattern + numbers</li>
-        <li><code>Sarah1997!</code> Name + birth year</li>
-        <li><code>aaaa1111</code> Repeated characters</li>
-      </ul>
+<div class="light alt"><section class="wrap band">
+  <div class="split">
+    <div>
+      <div class="gold-rule"></div><h2 class="head">If your password was leaked</h2>
+      <p class="intro">Work through these steps in order. Most accounts can be secured in under an hour.</p>
     </div>
-    <div class="ex good">
-      <h3>✓ Hard to crack</h3>
-      <ul>
-        <li><code>Maple-River-Jacket-42</code> Random words, long</li>
-        <li><code>t7#Kq!m2Vz9@Lp</code> Random, 14+ characters</li>
-        <li><code>Blue!Owl$Sings*Late</code> Passphrase with symbols</li>
-        <li><code>x9$Rw2!eQ7#nB4</code> Made by a password manager</li>
-      </ul>
-    </div>
+    <ol class="steps">
+      <li><h3>Change the password now</h3><p>Start with your email account, since it can reset every other password.</p></li>
+      <li><h3>Replace it everywhere you reused it</h3><p>Give each account its own new, unique password.</p></li>
+      <li><h3>Turn on two-factor authentication</h3><p>Choose an authenticator app or security key over text messages where you can.</p></li>
+      <li><h3>Review recent activity</h3><p>Look for unfamiliar logins, devices, forwarding rules or payments, and sign out other sessions.</p></li>
+      <li><h3>Watch your financial accounts</h3><p>Set up alerts with your bank, and consider a credit freeze if personal details were exposed.</p></li>
+    </ol>
   </div>
 </section>
+</div>
 
-<section class="info" id="tips">
-  <div class="section-head">
-    <div class="kicker">Protect yourself</div>
-    <h2>6 habits that keep your accounts safe</h2>
-    <p>A strong password is the start. These habits close the gaps attackers use most.</p>
-  </div>
-  <div class="grid-3">
-    <div class="tip">
-      <div class="icon i-indigo">📏</div>
-      <h3>Go long</h3>
-      <p>Use at least 12 characters, ideally 16 or more. A passphrase of four random words is long and easy to remember.</p>
-    </div>
-    <div class="tip">
-      <div class="icon i-teal">🔑</div>
-      <h3>One account, one password</h3>
-      <p>Never reuse passwords. If one site is breached, attackers try the same login everywhere else.</p>
-    </div>
-    <div class="tip">
-      <div class="icon i-amber">🗄️</div>
-      <h3>Use a password manager</h3>
-      <p>Let a password manager create and remember unique passwords for you. You only need one strong master password.</p>
-    </div>
-    <div class="tip">
-      <div class="icon i-violet">📱</div>
-      <h3>Turn on two-factor (2FA)</h3>
-      <p>Add an authenticator app or security key. Even if your password leaks, an attacker still can't get in.</p>
-    </div>
-    <div class="tip">
-      <div class="icon i-rose">🎣</div>
-      <h3>Watch for phishing</h3>
-      <p>Don't enter your password from a link in an email or text. Go to the site directly and check the address.</p>
-    </div>
-    <div class="tip">
-      <div class="icon i-green">🔄</div>
-      <h3>Act fast after a breach</h3>
-      <p>If a service you use is breached, change that password right away, plus anywhere you used the same one.</p>
-    </div>
-  </div>
-</section>
-
-<section class="info">
-  <div class="section-head">
-    <div class="kicker">Got hacked?</div>
-    <h2>What to do if your password was leaked</h2>
-  </div>
-  <div class="steps">
-    <div class="step"><h3>Change the password now</h3><p>Start with your email account, since it can reset every other password.</p></div>
-    <div class="step"><h3>Change it everywhere you reused it</h3><p>Give each account its own new, unique password.</p></div>
-    <div class="step"><h3>Turn on two-factor authentication</h3><p>Prefer an authenticator app or security key over text messages.</p></div>
-    <div class="step"><h3>Check recent activity</h3><p>Look for unknown logins, devices, forwarding rules or payments, and sign out other sessions.</p></div>
-    <div class="step"><h3>Watch your financial accounts</h3><p>Set up alerts with your bank and consider a credit freeze if personal details were exposed.</p></div>
-  </div>
-</section>
-
-<section class="info" id="faq">
-  <div class="section-head">
-    <div class="kicker">FAQ</div>
-    <h2>Common questions</h2>
-  </div>
-  <div class="faq">
+<div class="light"><section class="wrap band" id="faq">
+  <div class="gold-rule"></div><h2 class="head">Common questions</h2>
+  <div class="faq" style="margin-top:32px">
     <details open>
       <summary>Is it safe to type my password here?</summary>
       <p>Yes. The strength and reuse checks run entirely in your browser. For the breach check, your password is turned into a hash and only the first 5 characters of that hash are sent to Have I Been Pwned, so your actual password never leaves your device. Nothing is stored.</p>
     </details>
     <details>
       <summary>How does the breach check work?</summary>
-      <p>It uses Have I Been Pwned's "k-anonymity" method. The service returns every leaked hash that starts with the same 5 characters, and your browser checks for a match locally.</p>
+      <p>It uses Have I Been Pwned's k-anonymity method. The service returns every leaked hash that starts with the same 5 characters, and your browser looks for a match locally.</p>
     </details>
     <details>
       <summary>What is entropy?</summary>
-      <p>Entropy estimates how unpredictable a password is, measured in bits. Each extra bit doubles the number of guesses needed. Aim for 70 bits or more.</p>
+      <p>Entropy estimates how unpredictable a password is, measured in bits. Each extra bit doubles the number of guesses needed to crack it. Aim for 70 bits or more.</p>
     </details>
     <details>
       <summary>What makes a password strong?</summary>
-      <p>Length, randomness and uniqueness. Use 12–16+ characters, avoid names, dates and keyboard patterns, and never use the same password on two sites.</p>
+      <p>Length, randomness and uniqueness. Use 12–16 or more characters, avoid names, dates and keyboard patterns, and never use the same password on two sites.</p>
     </details>
     <details>
       <summary>Should I change my passwords regularly?</summary>
-      <p>Current guidance says no, not on a schedule. Change a password when there's a reason, such as a breach, and focus on making each one long and unique.</p>
+      <p>Not on a fixed schedule. Current guidance is to change a password when there's a reason, such as a breach, and to focus on making each one long and unique.</p>
     </details>
   </div>
 </section>
-
-<div class="cta">
-  <div class="cta-box">
-    <h2>Check your passwords today</h2>
-    <p>It takes 30 seconds and could save you from a hacked account.</p>
-    <a href="#checker">Check a password</a>
-  </div>
 </div>
+</main>
+
+<section class="closing">
+  <div class="wrap">
+    <h2>Check your passwords today</h2>
+    <p>It takes less than a minute and could save you from a hacked account.</p>
+    <a class="btn" href="#checker">Check a password</a>
+  </div>
+</section>
 
 <footer>
-  <div class="foot">
-    <div>© 2026 Password Strength Checker · Built by Precious Ogundu · <a href="contact.html">Contact us</a></div>
-    <div>Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a></div>
+  <div class="wrap foot">
+    <div>&copy; 2026 Password Strength Checker</div>
+    <div><a href="contact.html">Contact us</a>&nbsp;&nbsp;&nbsp;Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a></div>
   </div>
 </footer>
 
