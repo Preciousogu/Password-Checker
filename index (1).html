@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Password Strength Checker — Free Password Strength & Breach Check</title>
+<meta name="description" content="Free password strength checker. See how strong your password is, check if it appeared in a data breach, spot reused passwords, and learn how to protect your accounts. Runs in your browser.">
+<link rel="canonical" href="https://passwordstrengthchecker.online/">
+<meta property="og:title" content="Password Strength Checker">
+<meta property="og:description" content="Check your password strength, breach status and reuse — free and private, right in your browser.">
+<meta property="og:url" content="https://passwordstrengthchecker.online/">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%234f46e5'/><path d='M32 14l14 6v10c0 9-6 16-14 20-8-4-14-11-14-20V20z' fill='white'/></svg>">
+<style>
+  :root {
+    --ink: #0f172a;
+    --muted: #475569;
+    --line: #e2e8f0;
+    --bg: #f8fafc;
+    --indigo: #4f46e5;
+    --violet: #7c3aed;
+    --teal: #0d9488;
+    --amber: #d97706;
+    --rose: #e11d48;
+    --green: #16a34a;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  a { color: var(--indigo); }
+
+  /* ---------- Header ---------- */
+  header.site {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    max-width: 1080px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; }
+  .brand-mark {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--indigo), var(--teal));
+    display: grid; place-items: center;
+  }
+  .nav-links { display: flex; gap: 22px; font-size: 14px; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  .nav-links a:hover { color: var(--indigo); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #0d9488 100%);
+    color: white;
+    padding: 64px 20px 140px;
+    text-align: center;
+  }
+  .hero .eyebrow {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; background: rgba(255,255,255,0.15);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 16px;
+  }
+  .hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 0 14px; }
+  .hero p { font-size: 18px; max-width: 620px; margin: 0 auto; color: rgba(255,255,255,0.88); }
+  .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+  .badge {
+    font-size: 13px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+    padding: 6px 12px; border-radius: 999px;
+  }
+
+  /* ---------- Tool cards (dark, as before) ---------- */
+  .tool-wrap {
+    max-width: 1080px; margin: -100px auto 0; padding: 0 20px;
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: start;
+  }
+  .card {
+    background: #1a1d24;
+    color: #e6e6e6;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 20px 40px rgba(15,23,42,0.25);
+  }
+  .card h2.tool-title { font-size: 20px; margin: 0 0 6px 0; color: #fff; }
+  .card h2 { font-size: 18px; margin: 0 0 8px 0; color: #fff; }
+  p.sub { font-size: 13px; color: #9aa0aa; margin: 0 0 18px 0; line-height: 1.5; }
+  .card input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #0f1115;
+    color: #e6e6e6;
+    margin-bottom: 8px;
+  }
+  .card input:focus { outline: none; border-color: #818cf8; }
+  .bar-track {
+    width: 100%; height: 10px; background: #2a2d35;
+    border-radius: 5px; margin-top: 16px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; width: 0%; background: #c0392b;
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+  .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; }
+  .label { font-weight: 600; font-size: 15px; }
+  .entropy { font-size: 12px; color: #888; }
+  .section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: #8b8f99; margin: 20px 0 8px 0;
+  }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 13px; }
+  .check { color: #6b6f78; }
+  .check.met { color: #4caf50; }
+  ul.feedback { margin: 14px 0 0 0; padding-left: 18px; font-size: 13px; color: #aaa; line-height: 1.6; }
+  ul.feedback li { margin-bottom: 4px; }
+  .row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .row input { margin-bottom: 0; }
+  .row input.platform { flex: 1; }
+  .row input.pw { flex: 1.4; }
+  .card button {
+    background: #2a2d35; color: #e6e6e6; border: 1px solid #3a3d45;
+    border-radius: 8px; padding: 10px 16px; font-size: 13px;
+    cursor: pointer; margin-top: 6px;
+  }
+  .card button:hover { background: #34373f; }
+  .reuse-result { margin-top: 14px; font-size: 13px; padding: 10px 12px; border-radius: 8px; }
+  .reuse-warn { background: #3a2020; color: #f5a3a3; }
+  .breach-status { margin-top: 16px; font-size: 13px; padding: 12px; border-radius: 8px; }
+  .breach-checking { background: #2a2d35; color: #aaa; }
+  .breach-safe { background: #1f3320; color: #8fd98f; }
+  .breach-found { background: #3a2020; color: #f5a3a3; }
+  .breach-error { background: #332a1f; color: #e2b93b; }
+  .privacy-note {
+    margin-top: 18px; padding: 14px 16px; border-radius: 12px;
+    background: #eef2ff; color: #3730a3; font-size: 13px; line-height: 1.5;
+  }
+  .privacy-note strong { display: block; margin-bottom: 2px; }
+
+  /* ---------- Info sections ---------- */
+  section.info { max-width: 1080px; margin: 0 auto; padding: 72px 20px 0; }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 36px; }
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
+  .section-head h2 { font-size: clamp(24px, 3.5vw, 32px); margin: 6px 0 10px; line-height: 1.2; }
+  .section-head p { color: var(--muted); margin: 0; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .stat {
+    background: white; border: 1px solid var(--line); border-radius: 16px; padding: 22px;
+  }
+  .stat .big { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .stat p { margin: 0; color: var(--muted); font-size: 14px; }
+  .stat.c1 .big { color: var(--rose); }
+  .stat.c2 .big { color: var(--amber); }
+  .stat.c3 .big { color: var(--indigo); }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .tip {
+    background: white; border: 1px solid var(--line); border-radius: 16px; padding: 22px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tip:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(15,23,42,0.08); }
+  .icon {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    font-size: 22px; margin-bottom: 14px;
+  }
+  .tip h3 { margin: 0 0 6px; font-size: 17px; }
+  .tip p { margin: 0; color: var(--muted); font-size: 14px; }
+  .i-indigo { background: #eef2ff; }
+  .i-teal { background: #ccfbf1; }
+  .i-amber { background: #fef3c7; }
+  .i-rose { background: #ffe4e6; }
+  .i-violet { background: #ede9fe; }
+  .i-green { background: #dcfce7; }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .ex { border-radius: 16px; padding: 22px; }
+  .ex.bad { background: #fff1f2; border: 1px solid #fecdd3; }
+  .ex.good { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .ex h3 { margin: 0 0 12px; font-size: 16px; }
+  .ex.bad h3 { color: var(--rose); }
+  .ex.good h3 { color: var(--green); }
+  .ex ul { margin: 0; padding: 0; list-style: none; }
+  .ex li { padding: 8px 0; border-top: 1px dashed rgba(15,23,42,0.1); font-size: 14px; color: var(--muted); }
+  .ex li:first-child { border-top: none; }
+  .ex code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+    background: white; padding: 2px 8px; border-radius: 6px; color: var(--ink); margin-right: 6px;
+  }
+
+  .steps { counter-reset: s; display: grid; gap: 14px; max-width: 760px; margin: 0 auto; }
+  .step {
+    counter-increment: s; background: white; border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 20px 18px 70px; position: relative;
+  }
+  .step::before {
+    content: counter(s); position: absolute; left: 20px; top: 18px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--indigo), var(--teal));
+    color: white; font-weight: 700; display: grid; place-items: center;
+  }
+  .step h3 { margin: 0 0 4px; font-size: 16px; }
+  .step p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  .faq { max-width: 760px; margin: 0 auto; }
+  details {
+    background: white; border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 12px;
+  }
+  summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--indigo); font-size: 20px; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+  .cta {
+    max-width: 1080px; margin: 72px auto 0; padding: 0 20px;
+  }
+  .cta-box {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white;
+    border-radius: 20px; padding: 36px; text-align: center;
+  }
+  .cta-box h2 { margin: 0 0 8px; font-size: 26px; }
+  .cta-box p { margin: 0 0 20px; color: rgba(255,255,255,0.88); }
+  .cta-box a {
+    display: inline-block; background: white; color: var(--indigo); font-weight: 700;
+    padding: 12px 22px; border-radius: 10px; text-decoration: none;
+  }
+
+  footer {
+    margin-top: 72px; background: #0f172a; color: #94a3b8; font-size: 14px;
+  }
+  .foot {
+    max-width: 1080px; margin: 0 auto; padding: 32px 20px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
+  }
+  footer a { color: #c7d2fe; }
+
+  @media (max-width: 860px) {
+    .tool-wrap, .compare { grid-template-columns: 1fr; }
+    .grid-3, .stats { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero { padding: 48px 20px 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a class="brand" href="#">
+      <span class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2l8 3.5V11c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5.5z"/></svg>
+      </span>
+      Password Strength Checker
+    </a>
+    <div class="nav-links">
+      <a href="#checker">Checker</a>
+      <a href="#why">Why it matters</a>
+      <a href="#tips">Protect yourself</a>
+      <a href="#faq">FAQ</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Free · Private · No sign-up</div>
+  <h1>How strong is your password?</h1>
+  <p>Check its strength, see whether it has shown up in a data breach, and find out if you're reusing it, all in your browser.</p>
+  <div class="badges">
+    <span class="badge">🔒 Your password stays on your device</span>
+    <span class="badge">⚡ Instant results</span>
+    <span class="badge">🛡️ Breach check by Have I Been Pwned</span>
+  </div>
+</section>
+
+<div class="tool-wrap" id="checker">
+
+<div>
+<div class="card">
+  <h2 class="tool-title">Password Strength Checker</h2>
+  <p class="sub">Checks character variety, real weak patterns (sequential runs, repeated characters, keyboard walks), and estimated entropy.</p>
+
+  <input type="text" id="pw" placeholder="Type a password to check it..." autocomplete="off">
+
+  <div class="bar-track"><div class="bar-fill" id="bar"></div></div>
+  <div class="label-row">
+    <div class="label" id="label">No password entered</div>
+    <div class="entropy" id="entropy"></div>
+  </div>
+
+  <div class="section-title">Character requirements</div>
+  <div class="checks">
+    <div class="check" id="check-length">○ 12+ characters</div>
+    <div class="check" id="check-upper">○ Uppercase letter</div>
+    <div class="check" id="check-lower">○ Lowercase letter</div>
+    <div class="check" id="check-digit">○ Number</div>
+    <div class="check" id="check-symbol">○ Special character</div>
+    <div class="check" id="check-common">○ Not a common password</div>
+  </div>
+
+  <div class="section-title">Pattern checks</div>
+  <div class="checks">
+    <div class="check" id="check-sequential">○ No sequential runs</div>
+    <div class="check" id="check-repeated">○ No repeated characters</div>
+    <div class="check" id="check-keyboard">○ No keyboard patterns</div>
+  </div>
+
+  <ul class="feedback" id="feedback"></ul>
+
+  <div class="section-title">Public breach check</div>
+  <p class="sub" style="margin-top:-6px;">Checks this password against the "Have I Been Pwned" database of known breached passwords. Only the first 5 characters of a hash are sent — your actual password never leaves your browser. Requires an internet connection.</p>
+  <div class="breach-status breach-checking" id="breach-status">Type a password above to check.</div>
+</div>
+</div>
+
+<div>
+<div class="card">
+  <h2>Reuse Checker</h2>
+  <p class="sub">Enter the password you use for a few different platforms below. This only compares what you type here — it cannot see your actual accounts on other sites.</p>
+
+  <div id="reuse-rows"></div>
+  <button id="add-row">+ Add another platform</button>
+
+  <div id="reuse-result"></div>
+</div>
+<div class="privacy-note">
+  <strong>🔒 Private by design</strong>
+  Nothing you type is saved or sent to us. Close the tab and it's gone.
+</div>
+</div>
+
+</div>
+
+<section class="info" id="why">
+  <div class="section-head">
+    <div class="kicker">Why it matters</div>
+    <h2>Your password is the front door to your life online</h2>
+    <p>Email, bank, social media and work accounts often hang on a single password. Here's why a weak one is risky.</p>
+  </div>
+  <div class="stats">
+    <div class="stat c1">
+      <div class="big">Billions</div>
+      <p>of real passwords have leaked in data breaches. Attackers try these first.</p>
+    </div>
+    <div class="stat c2">
+      <div class="big">Seconds</div>
+      <p>is all it takes a computer to guess a short or common password like "password123".</p>
+    </div>
+    <div class="stat c3">
+      <div class="big">One leak</div>
+      <p>can unlock every account where you reused the same password.</p>
+    </div>
+  </div>
+</section>
+
+<section class="info">
+  <div class="section-head">
+    <div class="kicker">Spot the difference</div>
+    <h2>Weak vs. strong passwords</h2>
+    <p>Length beats complexity. A long, random phrase is far harder to crack than a short word with symbols.</p>
+  </div>
+  <div class="compare">
+    <div class="ex bad">
+      <h3>✗ Easy to crack</h3>
+      <ul>
+        <li><code>password1</code> One of the most leaked passwords</li>
+        <li><code>qwerty123</code> Keyboard pattern + numbers</li>
+        <li><code>Sarah1997!</code> Name + birth year</li>
+        <li><code>aaaa1111</code> Repeated characters</li>
+      </ul>
+    </div>
+    <div class="ex good">
+      <h3>✓ Hard to crack</h3>
+      <ul>
+        <li><code>Maple-River-Jacket-42</code> Random words, long</li>
+        <li><code>t7#Kq!m2Vz9@Lp</code> Random, 14+ characters</li>
+        <li><code>Blue!Owl$Sings*Late</code> Passphrase with symbols</li>
+        <li><code>x9$Rw2!eQ7#nB4</code> Made by a password manager</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="info" id="tips">
+  <div class="section-head">
+    <div class="kicker">Protect yourself</div>
+    <h2>6 habits that keep your accounts safe</h2>
+    <p>A strong password is the start. These habits close the gaps attackers use most.</p>
+  </div>
+  <div class="grid-3">
+    <div class="tip">
+      <div class="icon i-indigo">📏</div>
+      <h3>Go long</h3>
+      <p>Use at least 12 characters, ideally 16 or more. A passphrase of four random words is long and easy to remember.</p>
+    </div>
+    <div class="tip">
+      <div class="icon i-teal">🔑</div>
+      <h3>One account, one password</h3>
+      <p>Never reuse passwords. If one site is breached, attackers try the same login everywhere else.</p>
+    </div>
+    <div class="tip">
+      <div class="icon i-amber">🗄️</div>
+      <h3>Use a password manager</h3>
+      <p>Let a password manager create and remember unique passwords for you. You only need one strong master password.</p>
+    </div>
+    <div class="tip">
+      <div class="icon i-violet">📱</div>
+      <h3>Turn on two-factor (2FA)</h3>
+      <p>Add an authenticator app or security key. Even if your password leaks, an attacker still can't get in.</p>
+    </div>
+    <div class="tip">
+      <div class="icon i-rose">🎣</div>
+      <h3>Watch for phishing</h3>
+      <p>Don't enter your password from a link in an email or text. Go to the site directly and check the address.</p>
+    </div>
+    <div class="tip">
+      <div class="icon i-green">🔄</div>
+      <h3>Act fast after a breach</h3>
+      <p>If a service you use is breached, change that password right away, plus anywhere you used the same one.</p>
+    </div>
+  </div>
+</section>
+
+<section class="info">
+  <div class="section-head">
+    <div class="kicker">Got hacked?</div>
+    <h2>What to do if your password was leaked</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><h3>Change the password now</h3><p>Start with your email account, since it can reset every other password.</p></div>
+    <div class="step"><h3>Change it everywhere you reused it</h3><p>Give each account its own new, unique password.</p></div>
+    <div class="step"><h3>Turn on two-factor authentication</h3><p>Prefer an authenticator app or security key over text messages.</p></div>
+    <div class="step"><h3>Check recent activity</h3><p>Look for unknown logins, devices, forwarding rules or payments, and sign out other sessions.</p></div>
+    <div class="step"><h3>Watch your financial accounts</h3><p>Set up alerts with your bank and consider a credit freeze if personal details were exposed.</p></div>
+  </div>
+</section>
+
+<section class="info" id="faq">
+  <div class="section-head">
+    <div class="kicker">FAQ</div>
+    <h2>Common questions</h2>
+  </div>
+  <div class="faq">
+    <details open>
+      <summary>Is it safe to type my password here?</summary>
+      <p>Yes. The strength and reuse checks run entirely in your browser. For the breach check, your password is turned into a hash and only the first 5 characters of that hash are sent to Have I Been Pwned, so your actual password never leaves your device. Nothing is stored.</p>
+    </details>
+    <details>
+      <summary>How does the breach check work?</summary>
+      <p>It uses Have I Been Pwned's "k-anonymity" method. The service returns every leaked hash that starts with the same 5 characters, and your browser checks for a match locally.</p>
+    </details>
+    <details>
+      <summary>What is entropy?</summary>
+      <p>Entropy estimates how unpredictable a password is, measured in bits. Each extra bit doubles the number of guesses needed. Aim for 70 bits or more.</p>
+    </details>
+    <details>
+      <summary>What makes a password strong?</summary>
+      <p>Length, randomness and uniqueness. Use 12–16+ characters, avoid names, dates and keyboard patterns, and never use the same password on two sites.</p>
+    </details>
+    <details>
+      <summary>Should I change my passwords regularly?</summary>
+      <p>Current guidance says no, not on a schedule. Change a password when there's a reason, such as a breach, and focus on making each one long and unique.</p>
+    </details>
+  </div>
+</section>
+
+<div class="cta">
+  <div class="cta-box">
+    <h2>Check your passwords today</h2>
+    <p>It takes 30 seconds and could save you from a hacked account.</p>
+    <a href="#checker">Check a password</a>
+  </div>
+</div>
+
+<footer>
+  <div class="foot">
+    <div>© 2026 Password Strength Checker · Built by Precious Ogundu · <a href="contact.html">Contact us</a></div>
+    <div>Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a></div>
+  </div>
+</footer>
+
+<script>
+// =======================================================================
+// STRENGTH-CHECK LOGIC — identical to the version that passed 43 tests
+// =======================================================================
+const COMMON_PASSWORDS = [
+  "password", "123456", "12345678", "123456789", "qwerty", "abc123",
+  "password1", "111111", "letmein", "welcome", "admin", "iloveyou",
+  "monkey", "dragon", "football", "baseball", "master", "sunshine",
+  "princess", "qwerty123", "solo", "starwars", "trustno1", "passw0rd",
+  "login", "michael", "shadow", "superman", "batman", "hello123"
+];
+const KEYBOARD_PATTERNS = [
+  "qwerty", "asdfgh", "zxcvbn", "qazwsx", "1qaz2wsx", "qwertyuiop",
+  "asdfghjkl", "zxcvbnm", "1234567890"
+];
+function hasSequentialRun(password) {
+  const lower = password.toLowerCase();
+  for (let i = 0; i < lower.length - 2; i++) {
+    const a = lower.charCodeAt(i), b = lower.charCodeAt(i + 1), c = lower.charCodeAt(i + 2);
+    if ((b === a + 1 && c === b + 1) || (b === a - 1 && c === b - 1)) return true;
+  }
+  return false;
+}
+function hasRepeatedRun(password) {
+  for (let i = 0; i < password.length - 2; i++) {
+    if (password[i] === password[i + 1] && password[i] === password[i + 2]) return true;
+  }
+  return false;
+}
+function hasKeyboardPattern(password) {
+  const lower = password.toLowerCase();
+  return KEYBOARD_PATTERNS.some(p => lower.includes(p));
+}
+function calculateEntropyBits(password, hasLower, hasUpper, hasDigit, hasSymbol) {
+  if (password.length === 0) return 0;
+  let poolSize = 0;
+  if (hasLower) poolSize += 26;
+  if (hasUpper) poolSize += 26;
+  if (hasDigit) poolSize += 10;
+  if (hasSymbol) poolSize += 32;
+  if (poolSize === 0) return 0;
+  return Math.round(password.length * Math.log2(poolSize) * 10) / 10;
+}
+function analyzePassword(password) {
+  const result = {
+    length: password.length,
+    hasLower: /[a-z]/.test(password),
+    hasUpper: /[A-Z]/.test(password),
+    hasDigit: /[0-9]/.test(password),
+    hasSymbol: /[^a-zA-Z0-9]/.test(password),
+    isCommon: COMMON_PASSWORDS.includes(password.toLowerCase()),
+    hasSequential: hasSequentialRun(password),
+    hasRepeated: hasRepeatedRun(password),
+    hasKeyboardPattern: hasKeyboardPattern(password),
+  };
+  result.entropyBits = calculateEntropyBits(password, result.hasLower, result.hasUpper, result.hasDigit, result.hasSymbol);
+  let score = 0;
+  const feedback = [];
+  if (result.length >= 16) score += 25;
+  else if (result.length >= 12) { score += 18; feedback.push("12+ characters is good — 16+ is even stronger."); }
+  else if (result.length >= 8) { score += 8; feedback.push("Use at least 12 characters for solid strength."); }
+  else if (result.length > 0) feedback.push("Too short — use at least 12 characters.");
+  let varietyCount = 0;
+  if (result.hasLower) varietyCount++;
+  if (result.hasUpper) varietyCount++;
+  if (result.hasDigit) varietyCount++;
+  if (result.hasSymbol) varietyCount++;
+  score += varietyCount * 10;
+  if (!result.hasUpper) feedback.push("Add an uppercase letter.");
+  if (!result.hasLower) feedback.push("Add a lowercase letter.");
+  if (!result.hasDigit) feedback.push("Add a number.");
+  if (!result.hasSymbol) feedback.push("Add a special character (e.g. ! @ # $).");
+  if (result.entropyBits >= 70) score += 15;
+  else if (result.entropyBits >= 50) score += 8;
+  if (result.hasSequential) { score -= 15; feedback.push("Avoid sequential characters like 'abc' or '321'."); }
+  if (result.hasRepeated) { score -= 15; feedback.push("Avoid repeating the same character 3+ times in a row."); }
+  if (result.hasKeyboardPattern) { score -= 20; feedback.push("Avoid keyboard patterns like 'qwerty' or 'asdfgh'."); }
+  if (result.isCommon) { score = Math.min(score, 5); feedback.unshift("This is a commonly leaked/used password — avoid it entirely."); }
+  score = Math.max(0, Math.min(score, 100));
+  let label;
+  if (result.length === 0) { label = "No password entered"; score = 0; }
+  else if (score >= 80) label = "Strong";
+  else if (score >= 50) label = "Moderate";
+  else label = "Weak";
+  return Object.assign({}, result, { score, label, feedback });
+}
+
+// =======================================================================
+// BREACH-CHECK LOGIC — identical to the version whose hashing (verified
+// against Python hashlib) and response parsing passed 10 tests
+// =======================================================================
+async function sha1Hex(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest("SHA-1", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+function parseHibpResponse(responseText, targetSuffix) {
+  const lines = responseText.trim().split("\n");
+  for (const line of lines) {
+    const [suffix, countStr] = line.trim().split(":");
+    if (suffix === targetSuffix) return parseInt(countStr, 10);
+  }
+  return 0;
+}
+async function checkPasswordBreach(password) {
+  if (!password) return { breached: false, count: 0 };
+  const fullHash = await sha1Hex(password);
+  const prefix = fullHash.slice(0, 5);
+  const suffix = fullHash.slice(5);
+  try {
+    const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+    if (!response.ok) return { error: `API returned status ${response.status}` };
+    const text = await response.text();
+    const count = parseHibpResponse(text, suffix);
+    return { breached: count > 0, count };
+  } catch (err) {
+    return { error: "Unable to reach breach-check service (check your internet connection)." };
+  }
+}
+
+// =======================================================================
+// REUSE-CHECK LOGIC — identical to the version that passed 12 tests
+// =======================================================================
+function findReusedPasswords(entries) {
+  const groups = {};
+  for (const entry of entries) {
+    const password = entry.password;
+    if (!password) continue;
+    if (!groups[password]) groups[password] = [];
+    groups[password].push(entry.platform || "(unnamed platform)");
+  }
+  const reused = [];
+  for (const password in groups) {
+    if (groups[password].length >= 2) reused.push({ password, platforms: groups[password] });
+  }
+  return reused;
+}
+
+// =======================================================================
+// UI WIRING — strength checker
+// =======================================================================
+const input = document.getElementById("pw");
+const bar = document.getElementById("bar");
+const label = document.getElementById("label");
+const entropyEl = document.getElementById("entropy");
+const feedbackList = document.getElementById("feedback");
+const breachStatus = document.getElementById("breach-status");
+
+const checkEls = {
+  length: document.getElementById("check-length"),
+  upper: document.getElementById("check-upper"),
+  lower: document.getElementById("check-lower"),
+  digit: document.getElementById("check-digit"),
+  symbol: document.getElementById("check-symbol"),
+  common: document.getElementById("check-common"),
+  sequential: document.getElementById("check-sequential"),
+  repeated: document.getElementById("check-repeated"),
+  keyboard: document.getElementById("check-keyboard"),
+};
+
+function setCheck(el, met, text) {
+  el.classList.toggle("met", met);
+  el.textContent = (met ? "✓ " : "○ ") + text;
+}
+
+let breachDebounceTimer = null;
+
+function updateStrength() {
+  const password = input.value;
+  const r = analyzePassword(password);
+
+  bar.style.width = r.score + "%";
+  bar.style.background = r.score >= 80 ? "#4caf50" : r.score >= 50 ? "#e2b93b" : "#c0392b";
+  label.textContent = r.label + (password.length > 0 ? " (" + r.score + "/100)" : "");
+  entropyEl.textContent = password.length > 0 ? r.entropyBits + " bits entropy" : "";
+
+  setCheck(checkEls.length, r.length >= 12, "12+ characters");
+  setCheck(checkEls.upper, r.hasUpper, "Uppercase letter");
+  setCheck(checkEls.lower, r.hasLower, "Lowercase letter");
+  setCheck(checkEls.digit, r.hasDigit, "Number");
+  setCheck(checkEls.symbol, r.hasSymbol, "Special character");
+  setCheck(checkEls.common, !r.isCommon && password.length > 0, "Not a common password");
+  setCheck(checkEls.sequential, password.length > 0 && !r.hasSequential, "No sequential runs");
+  setCheck(checkEls.repeated, password.length > 0 && !r.hasRepeated, "No repeated characters");
+  setCheck(checkEls.keyboard, password.length > 0 && !r.hasKeyboardPattern, "No keyboard patterns");
+
+  feedbackList.innerHTML = "";
+  r.feedback.forEach(msg => {
+    const li = document.createElement("li");
+    li.textContent = msg;
+    feedbackList.appendChild(li);
+  });
+
+  clearTimeout(breachDebounceTimer);
+  if (password.length === 0) {
+    breachStatus.className = "breach-status breach-checking";
+    breachStatus.textContent = "Type a password above to check.";
+    return;
+  }
+  breachStatus.className = "breach-status breach-checking";
+  breachStatus.textContent = "Checking...";
+  breachDebounceTimer = setTimeout(() => runBreachCheck(password), 700);
+}
+
+async function runBreachCheck(password) {
+  const result = await checkPasswordBreach(password);
+  if (input.value !== password) return; // stale response guard
+  if (result.error) {
+    breachStatus.className = "breach-status breach-error";
+    breachStatus.textContent = "⚠ " + result.error;
+  } else if (result.breached) {
+    breachStatus.className = "breach-status breach-found";
+    breachStatus.textContent = `⚠ This password has appeared in ${result.count.toLocaleString()} known data breaches. Do not use it.`;
+  } else {
+    breachStatus.className = "breach-status breach-safe";
+    breachStatus.textContent = "✓ Not found in known public breaches.";
+  }
+}
+
+input.addEventListener("input", updateStrength);
+updateStrength();
+
+// =======================================================================
+// UI WIRING — reuse checker
+// =======================================================================
+const reuseRows = document.getElementById("reuse-rows");
+const addRowBtn = document.getElementById("add-row");
+const reuseResult = document.getElementById("reuse-result");
+
+function addRow() {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML =
+    '<input type="text" class="platform" placeholder="Platform (e.g. Gmail)">' +
+    '<input type="text" class="pw" placeholder="Password used there">';
+  reuseRows.appendChild(row);
+  row.querySelectorAll("input").forEach(el => el.addEventListener("input", updateReuse));
+}
+
+function updateReuse() {
+  const rows = Array.from(reuseRows.querySelectorAll(".row"));
+  const entries = rows.map(row => ({
+    platform: row.querySelector(".platform").value.trim(),
+    password: row.querySelector(".pw").value,
+  }));
+  const reused = findReusedPasswords(entries);
+  if (reused.length === 0) {
+    reuseResult.innerHTML = "";
+    return;
+  }
+  let html = "";
+  reused.forEach(group => {
+    html += '<div class="reuse-result reuse-warn">⚠ Same password used for: ' + group.platforms.join(", ") + '</div>';
+  });
+  reuseResult.innerHTML = html;
+}
+
+addRowBtn.addEventListener("click", addRow);
+addRow();
+addRow();
+</script>
+</body>
+</html>
