@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Password Strength Checker — Free Password Strength &amp; Breach Check</title>
-<meta name="description" content="Free password strength checker. See how strong your password is, check if it appeared in a data breach, spot reused passwords, and learn how to protect your accounts. Runs in your browser.">
+<meta name="description" content="Free password strength checker and generator. See how strong your password is, check if it or your email appeared in a data breach, and learn how to protect your accounts.">
 <link rel="canonical" href="https://passwordstrengthchecker.online/">
 <meta property="og:title" content="Password Strength Checker">
-<meta property="og:description" content="Check your password strength, breach status and reuse, free and private, right in your browser.">
+<meta property="og:description" content="Check password strength, generate strong passwords, and see if your email was leaked. Free and private.">
 <meta property="og:url" content="https://passwordstrengthchecker.online/">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#061a3a">
@@ -179,22 +179,64 @@
 
 
 
-  /* Off-white checker panels */
+  /* Black checker panels */
   .tool .card {
-    --ice: #0b1f3f; --muted: #4b5f7c; --line: #cfd9e6; --cyan: #0a74b8; --navy-900: #ffffff;
-    background: #e9eef5; color: var(--ice);
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 0 1px rgba(63,208,255,0.25), 0 30px 60px -28px rgba(0,0,0,0.7);
+    background: #0a0d14; color: var(--ice);
+    border: 1px solid #1f2a3d;
+    box-shadow: 0 0 0 1px rgba(63,208,255,0.08), 0 30px 60px -28px rgba(0,0,0,0.8);
   }
-  .tool .card input::placeholder { color: #8193ad; }
-  .tool .bar-track { background: #cfd9e6; }
-  .tool .check { color: #8193ad; }
-  .tool .check.met { color: #157347; }
-  .tool .card button { color: #0b1f3f; border-color: #b9c7d8; background: #ffffff; }
-  .tool .card button:hover { border-color: #0b1f3f; }
-  .tool .breach-safe { background: #e3f6ec; color: #157347; border-color: #b7e4cb; }
-  .tool .breach-found, .tool .reuse-warn { background: #fde8eb; color: #b42335; border-color: #f5c2ca; }
-  .tool .breach-error { background: #fff4dc; color: #8a5a00; border-color: #f2d79a; }
+  .tool .card input { background: #000000; border-color: #263247; }
+  .tool .bar-track { background: #1c2433; }
+  .tool .check { color: #5d6b82; }
+  .tool .check.met { color: var(--ok); }
+  .tool .breach-checking { background: #000000; border-color: #263247; }
+  .tool .card button { color: var(--cyan); border-color: #263247; background: transparent; }
+  .tool .card button:hover { border-color: var(--cyan); }
+
+
+  /* Generator */
+  .seg { display: inline-flex; background: #000; border: 1px solid #263247; border-radius: 9px; padding: 3px; margin-bottom: 16px; }
+  .tool .card .seg-btn { margin: 0; border: none; border-radius: 7px; padding: 8px 16px; color: var(--muted); background: transparent; font-size: 14px; }
+  .tool .card .seg-btn.on { background: #1a2332; color: var(--ice); }
+  .gen-out { display: flex; gap: 8px; }
+  .gen-out input { margin: 0; font-size: 17px; letter-spacing: 0.02em; }
+  .tool .card #gen-copy { margin: 0; flex: 0 0 auto; background: var(--cyan); color: var(--navy-900); border: none; font-weight: 600; padding: 0 18px; }
+  .tool .card #gen-copy:hover { background: #7fe0ff; }
+  .gen-opt { margin-top: 20px; }
+  .gen-opt > label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .gen-opt > label span { color: var(--cyan); font-family: 'IBM Plex Mono', monospace; }
+  .gen-opt input[type=range] { width: 100%; accent-color: var(--cyan); padding: 0; border: none; background: transparent; margin: 0; }
+  .gen-checks { display: flex; gap: 22px; margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .gen-checks label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .gen-checks input { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--cyan); }
+  .gen-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .gen-actions button { margin: 0 !important; }
+
+  /* Email check */
+  .email-sec { padding-bottom: 96px; }
+  .email-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px; align-items: center; }
+  .email-card h2 { font-size: 24px; }
+  .email-card .sub { margin-bottom: 0; }
+  .email-form { display: flex; gap: 8px; }
+  .email-form input { margin: 0 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .tool .email-form .btn, .email-form .btn { flex: 0 0 auto; padding: 0 22px; margin: 0; }
+  .email-form .btn:disabled { opacity: 0.6; cursor: default; }
+  .email-result { grid-column: 1 / -1; font-size: 15px; }
+  .email-result:empty { display: none; }
+  .email-result { padding: 16px 18px; border-radius: 10px; border: 1px solid transparent; }
+  .email-result p { margin: 6px 0 0; color: inherit; opacity: 0.9; }
+  .email-result.ok { background: rgba(61,220,151,0.10); color: #9af0c8; border-color: rgba(61,220,151,0.3); }
+  .email-result.bad { background: rgba(255,107,122,0.12); color: #ffb3bb; border-color: rgba(255,107,122,0.3); }
+  .email-result.err { background: rgba(255,200,87,0.10); color: var(--warn); border-color: rgba(255,200,87,0.3); }
+  .breach-list { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .breach-list li { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,107,122,0.35); color: var(--ice); padding: 4px 10px; border-radius: 6px; font-size: 13px; }
+  .fallback-link { display: inline-block; margin-top: 10px; font-weight: 600; color: var(--cyan); }
+  .email-sec .card { background: #0a0d14; border: 1px solid #1f2a3d; }
+  .email-sec .card input { background: #000; border-color: #263247; }
+  .email-sec .email-form input { flex: 1 1 auto; width: auto; min-width: 0; }
+  .email-sec .email-form .btn { width: auto; flex: 0 0 auto; padding: 14px 22px; margin: 0; }
+  @media (max-width: 900px) { .email-card { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .email-form { flex-direction: column; } .email-sec .email-form .btn { width: 100%; } }
 
   /* Light sections */
   .light {
@@ -283,9 +325,9 @@
 <section class="wrap hero">
   <div>
     <h1>Know how strong your password really is.</h1>
-    <p class="lead">Test a password's strength, find out if it has appeared in a known data breach, and catch passwords you've reused. Everything runs privately in your browser.</p>
+    <p class="lead">Test a password's strength, see if it has appeared in a known data breach, generate a strong new one, and find out whether your email has been leaked.</p>
     <a class="btn" href="#checker">Check a password</a>
-    <p class="hero-note">Free to use. Nothing you type is stored.</p>
+    <p class="hero-note">Free to use. Passwords never leave your browser.</p>
   </div>
   <div>
     <svg class="hero-art" viewBox="0 0 600 400" role="img" aria-label="Glowing shield with a keyhole at the center of a circuit network">
@@ -415,18 +457,56 @@
 </div>
 
 <div>
-<div class="card">
-  <h2>Reuse Checker</h2>
-  <p class="sub">Enter the password you use for a few different platforms below. This only compares what you type here — it cannot see your actual accounts on other sites.</p>
+<div class="card gen">
+  <h2>Password Generator</h2>
+  <p class="sub">Create a strong password or an easy-to-remember passphrase. It's generated on your device and never sent anywhere.</p>
 
-  <div id="reuse-rows"></div>
-  <button id="add-row">+ Add another platform</button>
+  <div class="seg" role="radiogroup" aria-label="Type">
+    <button type="button" class="seg-btn on" data-mode="password" role="radio" aria-checked="true">Password</button>
+    <button type="button" class="seg-btn" data-mode="passphrase" role="radio" aria-checked="false">Passphrase</button>
+  </div>
 
-  <div id="reuse-result"></div>
+  <div class="gen-out">
+    <input type="text" id="gen-output" readonly aria-label="Generated password">
+    <button type="button" id="gen-copy">Copy</button>
+  </div>
+
+  <div class="gen-opt" id="opt-password">
+    <label for="gen-length">Length <span id="gen-length-val">16</span></label>
+    <input type="range" id="gen-length" min="12" max="40" value="16">
+    <div class="gen-checks">
+      <label><input type="checkbox" id="gen-digits" checked> Numbers</label>
+      <label><input type="checkbox" id="gen-symbols" checked> Symbols</label>
+    </div>
+  </div>
+
+  <div class="gen-opt" id="opt-passphrase" hidden>
+    <label for="gen-words">Words <span id="gen-words-val">5</span></label>
+    <input type="range" id="gen-words" min="4" max="8" value="5">
+  </div>
+
+  <div class="gen-actions">
+    <button type="button" id="gen-new">Generate new</button>
+    <button type="button" id="gen-test">Test it in the checker</button>
+  </div>
 </div>
-<p class="privacy"><strong>Private by design.</strong> Nothing you type is saved or sent to us. Close the tab and it's gone.</p>
+<p class="privacy"><strong>Private by design.</strong> Passwords you check or generate stay on your device. Nothing is saved.</p>
 </div>
 
+</section>
+
+<section class="wrap email-sec" id="email-check" aria-labelledby="email-h">
+  <div class="card email-card">
+    <div class="email-intro">
+      <h2 id="email-h">Has your email been in a data breach?</h2>
+      <p class="sub">Enter an email address to see which known data breaches it has appeared in. The check is done by <a href="https://xposedornot.com" target="_blank" rel="noopener">XposedOrNot</a>, a free breach-lookup service. Your email is sent to them for the lookup and isn't stored by this site.</p>
+    </div>
+    <form id="email-form" class="email-form" novalidate>
+      <input type="email" id="email-input" placeholder="you@example.com" autocomplete="email" aria-label="Email address" required>
+      <button type="submit" id="email-btn" class="btn">Check email</button>
+    </form>
+    <div id="email-result" class="email-result" role="status" aria-live="polite"></div>
+  </div>
 </section>
 
 <div class="light"><section class="wrap band">
@@ -492,11 +572,19 @@
   <div class="faq" style="margin-top:32px">
     <details open>
       <summary>Is it safe to type my password here?</summary>
-      <p>Yes. The strength and reuse checks run entirely in your browser. For the breach check, your password is turned into a hash and only the first 5 characters of that hash are sent to Have I Been Pwned, so your actual password never leaves your device. Nothing is stored.</p>
+      <p>Yes. The strength check and password generator run entirely in your browser. For the breach check, your password is turned into a hash and only the first 5 characters of that hash are sent to Have I Been Pwned, so your actual password never leaves your device. Nothing is stored.</p>
     </details>
     <details>
       <summary>How does the breach check work?</summary>
       <p>It uses Have I Been Pwned's k-anonymity method. The service returns every leaked hash that starts with the same 5 characters, and your browser looks for a match locally.</p>
+    </details>
+    <details>
+      <summary>What happens to my email when I check it?</summary>
+      <p>Your email address is sent to XposedOrNot, a free breach-lookup service, which replies with the breaches it appears in. This site doesn't store it or send it anywhere else.</p>
+    </details>
+    <details>
+      <summary>Are generated passwords safe to use?</summary>
+      <p>Yes. They're created on your device using your browser's secure random number generator and are never sent or saved. Store them in a password manager so you don't have to remember them.</p>
     </details>
     <details>
       <summary>What is entropy?</summary>
@@ -526,7 +614,7 @@
 <footer>
   <div class="wrap foot">
     <div>&copy; 2026 Password Strength Checker</div>
-    <div><a href="contact.html">Contact us</a>&nbsp;&nbsp;&nbsp;Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a></div>
+    <div><a href="contact.html">Contact us</a>&nbsp;&nbsp;&nbsp;Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a> and <a href="https://xposedornot.com" target="_blank" rel="noopener">XposedOrNot</a>&nbsp;&nbsp;&nbsp;Passphrase words from the <a href="https://www.eff.org/dice" target="_blank" rel="noopener">EFF</a></div>
   </div>
 </footer>
 
@@ -737,7 +825,14 @@ function updateStrength() {
 }
 
 async function runBreachCheck(password) {
-  const result = await checkPasswordBreach(password);
+  let result;
+  try {
+    result = await checkPasswordBreach(password);
+  } catch (err) {
+    result = { error: (window.isSecureContext === false)
+      ? "Breach check needs a secure (https) connection. Open this site with https:// to use it."
+      : "Breach check couldn't run in this browser. Try again or use another browser." };
+  }
   if (input.value !== password) return; // stale response guard
   if (result.error) {
     breachStatus.className = "breach-status breach-error";
@@ -754,44 +849,169 @@ async function runBreachCheck(password) {
 input.addEventListener("input", updateStrength);
 updateStrength();
 
-// =======================================================================
-// UI WIRING — reuse checker
-// =======================================================================
-const reuseRows = document.getElementById("reuse-rows");
-const addRowBtn = document.getElementById("add-row");
-const reuseResult = document.getElementById("reuse-result");
+</script>
 
-function addRow() {
-  const row = document.createElement("div");
-  row.className = "row";
-  row.innerHTML =
-    '<input type="text" class="platform" placeholder="Platform (e.g. Gmail)">' +
-    '<input type="text" class="pw" placeholder="Password used there">';
-  reuseRows.appendChild(row);
-  row.querySelectorAll("input").forEach(el => el.addEventListener("input", updateReuse));
-}
-
-function updateReuse() {
-  const rows = Array.from(reuseRows.querySelectorAll(".row"));
-  const entries = rows.map(row => ({
-    platform: row.querySelector(".platform").value.trim(),
-    password: row.querySelector(".pw").value,
-  }));
-  const reused = findReusedPasswords(entries);
-  if (reused.length === 0) {
-    reuseResult.innerHTML = "";
-    return;
+<script>
+// Password generator and email breach check
+(function () {
+  // ---------- secure random helpers ----------
+  function randInt(max) {
+    const limit = Math.floor(0x100000000 / max) * max;
+    const buf = new Uint32Array(1);
+    let x;
+    do { crypto.getRandomValues(buf); x = buf[0]; } while (x >= limit);
+    return x % max;
   }
-  let html = "";
-  reused.forEach(group => {
-    html += '<div class="reuse-result reuse-warn">⚠ Same password used for: ' + group.platforms.join(", ") + '</div>';
-  });
-  reuseResult.innerHTML = html;
-}
+  function pick(str) { return str[randInt(str.length)]; }
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) { const j = randInt(i + 1); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+    return arr;
+  }
 
-addRowBtn.addEventListener("click", addRow);
-addRow();
-addRow();
+  // EFF short wordlist (CC BY 3.0, Electronic Frontier Foundation)
+  const WORDS = "acid acorn acre acts afar affix aged agent agile aging agony ahead aide aids aim ajar alarm alias alibi alien alike alive aloe aloft aloha alone amend amino ample amuse angel anger angle ankle apple april apron aqua area arena argue arise armed armor army aroma array arson art ashen ashes atlas atom attic audio avert avoid awake award awoke axis bacon badge bagel baggy baked baker balmy banjo barge barn bash basil bask batch bath baton bats blade blank blast blaze bleak blend bless blimp blink bloat blob blog blot blunt blurt blush boast boat body boil bok bolt boned boney bonus bony book booth boots boss botch both boxer breed bribe brick bride brim bring brink brisk broad broil broke brook broom brush buck bud buggy bulge bulk bully bunch bunny bunt bush bust busy buzz cable cache cadet cage cake calm cameo canal candy cane canon cape card cargo carol carry carve case cash cause cedar chain chair chant chaos charm chase cheek cheer chef chess chest chew chief chili chill chip chomp chop chow chuck chump chunk churn chute cider cinch city civic civil clad claim clamp clap clash clasp class claw clay clean clear cleat cleft clerk click cling clink clip cloak clock clone cloth cloud clump coach coast coat cod coil coke cola cold colt coma come comic comma cone cope copy coral cork cost cot couch cough cover cozy craft cramp crane crank crate crave crawl crazy creme crepe crept crib cried crisp crook crop cross crowd crown crumb crush crust cub cult cupid cure curl curry curse curve curvy cushy cut cycle dab dad daily dairy daisy dance dandy darn dart dash data date dawn deaf deal dean debit debt debug decaf decal decay deck decor decoy deed delay denim dense dent depth derby desk dial diary dice dig dill dime dimly diner dingy disco dish disk ditch ditzy dizzy dock dodge doing doll dome donor donut dose dot dove down dowry doze drab drama drank draw dress dried drift drill drive drone droop drove drown drum dry duck duct dude dug duke duo dusk dust duty dwarf dwell eagle early earth easel east eaten eats ebay ebony ebook echo edge eel eject elbow elder elf elk elm elope elude elves email emit empty emu enter entry envoy equal erase error erupt essay etch evade even evict evil evoke exact exit fable faced fact fade fall false fancy fang fax feast feed femur fence fend ferry fetal fetch fever fiber fifth fifty film filth final finch fit five flag flaky flame flap flask fled flick fling flint flip flirt float flock flop floss flyer foam foe fog foil folic folk food fool found fox foyer frail frame fray fresh fried frill frisk from front frost froth frown froze fruit gag gains gala game gap gas gave gear gecko geek gem genre gift gig gills given giver glad glass glide gloss glove glow glue goal going golf gong good gooey goofy gore gown grab grain grant grape graph grasp grass grave gravy gray green greet grew grid grief grill grip grit groom grope growl grub grunt guide gulf gulp gummy guru gush gut guy habit half halo halt happy harm hash hasty hatch hate haven hazel hazy heap heat heave hedge hefty help herbs hers hub hug hula hull human humid hump hung hunk hunt hurry hurt hush hut ice icing icon icy igloo image ion iron islam issue item ivory ivy jab jam jaws jazz jeep jelly jet jiffy job jog jolly jolt jot joy judge juice juicy july jumbo jump junky juror jury keep keg kept kick kilt king kite kitty kiwi knee knelt koala kung ladle lady lair lake lance land lapel large lash lasso last latch late lazy left legal lemon lend lens lent level lever lid life lift lilac lily limb limes line lint lion lip list lived liver lunar lunch lung lurch lure lurk lying lyric mace maker malt mama mango manor many map march mardi marry mash match mate math moan mocha moist mold mom moody mop morse most motor motto mount mouse mousy mouth move movie mower mud mug mulch mule mull mumbo mummy mural muse music musky mute nacho nag nail name nanny nap navy near neat neon nerd nest net next niece ninth nutty oak oasis oat ocean oil old olive omen onion only ooze opal open opera opt otter ouch ounce outer oval oven owl ozone pace pagan pager palm panda panic pants panty paper park party pasta patch path patio payer pecan penny pep perch perky perm pest petal petri petty photo plank plant plaza plead plot plow pluck plug plus poach pod poem poet pogo point poise poker polar polio polka polo pond pony poppy pork poser pouch pound pout power prank press print prior prism prize probe prong proof props prude prune pry pug pull pulp pulse puma punch punk pupil puppy purr purse push putt quack quake query quiet quill quilt quit quota quote rabid race rack radar radio raft rage raid rail rake rally ramp ranch range rank rant rash raven reach react ream rebel recap relax relay relic remix repay repel reply rerun reset rhyme rice rich ride rigid rigor rinse riot ripen rise risk ritzy rival river roast robe robin rock rogue roman romp rope rover royal ruby rug ruin rule runny rush rust rut sadly sage said saint salad salon salsa salt same sandy santa satin sauna saved savor sax say scale scam scan scare scarf scary scoff scold scoop scoot scope score scorn scout scowl scrap scrub scuba scuff sect sedan self send sepia serve set seven shack shade shady shaft shaky sham shape share sharp shed sheep sheet shelf shell shine shiny ship shirt shock shop shore shout shove shown showy shred shrug shun shush shut shy sift silk silly silo sip siren sixth size skate skew skid skier skies skip skirt skit sky slab slack slain slam slang slash slate slaw sled sleek sleep sleet slept slice slick slimy sling slip slit slob slot slug slum slurp slush small smash smell smile smirk smog snack snap snare snarl sneak sneer sniff snore snort snout snowy snub snuff speak speed spend spent spew spied spill spiny spoil spoke spoof spool spoon sport spot spout spray spree spur squad squat squid stack staff stage stain stall stamp stand stank stark start stash state stays steam steep stem step stew stick sting stir stock stole stomp stony stood stool stoop stop storm stout stove straw stray strut stuck stud stuff stump stung stunt suds sugar sulk surf sushi swab swan swarm sway swear sweat sweep swell swept swim swing swipe swirl swoop swore syrup tacky taco tag take tall talon tamer tank taper taps tarot tart task taste tasty taunt thank thaw theft theme thigh thing think thong thorn those throb thud thumb thump thus tiara tidal tidy tiger tile tilt tint tiny trace track trade train trait trap trash tray treat tree trek trend trial tribe trick trio trout truce truck trump trunk try tug tulip tummy turf tusk tutor tutu tux tweak tweet twice twine twins twirl twist uncle uncut undo unify union unit untie upon upper urban used user usher utter value vapor vegan venue verse vest veto vice video view viral virus visa visor vixen vocal voice void volt voter vowel wad wafer wager wages wagon wake walk wand wasp watch water wavy wheat whiff whole whoop wick widen widow width wife wifi wilt wimp wind wing wink wipe wired wiry wise wish wispy wok wolf womb wool woozy word work worry wound woven wrath wreck wrist xerox yahoo yam yard year yeast yelp yield yodel yoga yoyo yummy zebra zero zesty zippy zone zoom".split(" ");
+  const LOWER = "abcdefghijkmnopqrstuvwxyz";
+  const UPPER = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const DIGITS = "23456789";
+  const SYMBOLS = "!@#$%^&*-_=+?";
+
+  const out = document.getElementById("gen-output");
+  const lenEl = document.getElementById("gen-length");
+  const lenVal = document.getElementById("gen-length-val");
+  const wordsEl = document.getElementById("gen-words");
+  const wordsVal = document.getElementById("gen-words-val");
+  const digitsEl = document.getElementById("gen-digits");
+  const symbolsEl = document.getElementById("gen-symbols");
+  const copyBtn = document.getElementById("gen-copy");
+  let mode = "password";
+
+  function makePassword() {
+    const n = parseInt(lenEl.value, 10);
+    const sets = [LOWER, UPPER];
+    if (digitsEl.checked) sets.push(DIGITS);
+    if (symbolsEl.checked) sets.push(SYMBOLS);
+    const all = sets.join("");
+    const chars = sets.map(pick);                    // at least one from each set
+    while (chars.length < n) chars.push(pick(all));
+    return shuffle(chars).join("");
+  }
+  function makePassphrase() {
+    const n = parseInt(wordsEl.value, 10);
+    const parts = [];
+    for (let i = 0; i < n; i++) {
+      const w = WORDS[randInt(WORDS.length)];
+      parts.push(w.charAt(0).toUpperCase() + w.slice(1));
+    }
+    return parts.join("-") + "-" + (10 + randInt(90));
+  }
+  function generate() {
+    out.value = mode === "password" ? makePassword() : makePassphrase();
+    copyBtn.textContent = "Copy";
+  }
+
+  document.querySelectorAll(".seg-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      mode = btn.dataset.mode;
+      document.querySelectorAll(".seg-btn").forEach(b => {
+        const on = b === btn; b.classList.toggle("on", on); b.setAttribute("aria-checked", on);
+      });
+      document.getElementById("opt-password").hidden = mode !== "password";
+      document.getElementById("opt-passphrase").hidden = mode !== "passphrase";
+      generate();
+    });
+  });
+  lenEl.addEventListener("input", () => { lenVal.textContent = lenEl.value; generate(); });
+  wordsEl.addEventListener("input", () => { wordsVal.textContent = wordsEl.value; generate(); });
+  digitsEl.addEventListener("change", generate);
+  symbolsEl.addEventListener("change", generate);
+  document.getElementById("gen-new").addEventListener("click", generate);
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(out.value);
+    } catch (e) {
+      out.select(); document.execCommand("copy");
+    }
+    copyBtn.textContent = "Copied";
+    setTimeout(() => { copyBtn.textContent = "Copy"; }, 1800);
+  });
+
+  document.getElementById("gen-test").addEventListener("click", () => {
+    const pw = document.getElementById("pw");
+    pw.value = out.value;
+    pw.dispatchEvent(new Event("input"));
+    pw.scrollIntoView({ behavior: "smooth", block: "center" });
+    pw.focus({ preventScroll: true });
+  });
+
+  generate();
+
+  // ---------- email breach check ----------
+  const form = document.getElementById("email-form");
+  const emailEl = document.getElementById("email-input");
+  const emailBtn = document.getElementById("email-btn");
+  const result = document.getElementById("email-result");
+
+  function show(kind, title, detail, list) {
+    result.className = "email-result " + kind;
+    result.innerHTML = "";
+    const h = document.createElement("strong"); h.textContent = title; result.appendChild(h);
+    if (detail) { const p = document.createElement("p"); p.textContent = detail; result.appendChild(p); }
+    if (list && list.length) {
+      const ul = document.createElement("ul"); ul.className = "breach-list";
+      list.forEach(name => { const li = document.createElement("li"); li.textContent = name; ul.appendChild(li); });
+      result.appendChild(ul);
+    }
+  }
+  function showFallback(msg) {
+    show("err", msg, "You can still check this email directly on XposedOrNot's website.");
+    const a = document.createElement("a");
+    a.href = "https://xposedornot.com/"; a.target = "_blank"; a.rel = "noopener";
+    a.textContent = "Open XposedOrNot";
+    a.className = "fallback-link";
+    result.appendChild(a);
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = emailEl.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      show("err", "Enter a valid email address, like you@example.com.");
+      emailEl.focus();
+      return;
+    }
+    emailBtn.disabled = true; emailBtn.textContent = "Checking...";
+    result.className = "email-result"; result.textContent = "";
+    try {
+      const res = await fetch("https://api.xposedornot.com/v1/check-email/" + encodeURIComponent(email));
+      if (res.status === 404) {
+        show("ok", "Good news: this email wasn't found in any known breaches.",
+             "Keep it that way with unique passwords and two-factor authentication.");
+      } else if (res.status === 429) {
+        show("err", "Too many checks right now. Wait a minute and try again.");
+      } else if (!res.ok) {
+        showFallback("The breach service didn't respond as expected.");
+      } else {
+        const data = await res.json();
+        let names = [];
+        if (data && Array.isArray(data.breaches)) names = data.breaches.flat(Infinity).map(String);
+        names = [...new Set(names.filter(Boolean))];
+        if (names.length === 0) {
+          show("ok", "Good news: this email wasn't found in any known breaches.",
+               "Keep it that way with unique passwords and two-factor authentication.");
+        } else {
+          show("bad",
+            "This email appeared in " + names.length + (names.length === 1 ? " known breach." : " known breaches."),
+            "If you still use the password you had on these services, change it now, along with anywhere you reused it, and turn on two-factor authentication.",
+            names);
+        }
+      }
+    } catch (err) {
+      showFallback("We couldn't reach the breach service from this page.");
+    }
+    emailBtn.disabled = false; emailBtn.textContent = "Check email";
+  });
+})();
 </script>
 </body>
 </html>

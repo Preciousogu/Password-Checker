@@ -7,7 +7,7 @@
 <meta name="description" content="Questions, feedback or ideas for Password Strength Checker? Leave us a message.">
 <link rel="canonical" href="https://passwordstrengthchecker.online/contact.html">
 <meta property="og:title" content="Password Strength Checker">
-<meta property="og:description" content="Check your password strength, breach status and reuse, free and private, right in your browser.">
+<meta property="og:description" content="Check password strength, generate strong passwords, and see if your email was leaked. Free and private.">
 <meta property="og:url" content="https://passwordstrengthchecker.online/">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#061a3a">
@@ -179,22 +179,64 @@
 
 
 
-  /* Off-white checker panels */
+  /* Black checker panels */
   .tool .card {
-    --ice: #0b1f3f; --muted: #4b5f7c; --line: #cfd9e6; --cyan: #0a74b8; --navy-900: #ffffff;
-    background: #e9eef5; color: var(--ice);
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 0 1px rgba(63,208,255,0.25), 0 30px 60px -28px rgba(0,0,0,0.7);
+    background: #0a0d14; color: var(--ice);
+    border: 1px solid #1f2a3d;
+    box-shadow: 0 0 0 1px rgba(63,208,255,0.08), 0 30px 60px -28px rgba(0,0,0,0.8);
   }
-  .tool .card input::placeholder { color: #8193ad; }
-  .tool .bar-track { background: #cfd9e6; }
-  .tool .check { color: #8193ad; }
-  .tool .check.met { color: #157347; }
-  .tool .card button { color: #0b1f3f; border-color: #b9c7d8; background: #ffffff; }
-  .tool .card button:hover { border-color: #0b1f3f; }
-  .tool .breach-safe { background: #e3f6ec; color: #157347; border-color: #b7e4cb; }
-  .tool .breach-found, .tool .reuse-warn { background: #fde8eb; color: #b42335; border-color: #f5c2ca; }
-  .tool .breach-error { background: #fff4dc; color: #8a5a00; border-color: #f2d79a; }
+  .tool .card input { background: #000000; border-color: #263247; }
+  .tool .bar-track { background: #1c2433; }
+  .tool .check { color: #5d6b82; }
+  .tool .check.met { color: var(--ok); }
+  .tool .breach-checking { background: #000000; border-color: #263247; }
+  .tool .card button { color: var(--cyan); border-color: #263247; background: transparent; }
+  .tool .card button:hover { border-color: var(--cyan); }
+
+
+  /* Generator */
+  .seg { display: inline-flex; background: #000; border: 1px solid #263247; border-radius: 9px; padding: 3px; margin-bottom: 16px; }
+  .tool .card .seg-btn { margin: 0; border: none; border-radius: 7px; padding: 8px 16px; color: var(--muted); background: transparent; font-size: 14px; }
+  .tool .card .seg-btn.on { background: #1a2332; color: var(--ice); }
+  .gen-out { display: flex; gap: 8px; }
+  .gen-out input { margin: 0; font-size: 17px; letter-spacing: 0.02em; }
+  .tool .card #gen-copy { margin: 0; flex: 0 0 auto; background: var(--cyan); color: var(--navy-900); border: none; font-weight: 600; padding: 0 18px; }
+  .tool .card #gen-copy:hover { background: #7fe0ff; }
+  .gen-opt { margin-top: 20px; }
+  .gen-opt > label { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .gen-opt > label span { color: var(--cyan); font-family: 'IBM Plex Mono', monospace; }
+  .gen-opt input[type=range] { width: 100%; accent-color: var(--cyan); padding: 0; border: none; background: transparent; margin: 0; }
+  .gen-checks { display: flex; gap: 22px; margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .gen-checks label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .gen-checks input { width: 16px; height: 16px; margin: 0; padding: 0; accent-color: var(--cyan); }
+  .gen-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  .gen-actions button { margin: 0 !important; }
+
+  /* Email check */
+  .email-sec { padding-bottom: 96px; }
+  .email-card { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px; align-items: center; }
+  .email-card h2 { font-size: 24px; }
+  .email-card .sub { margin-bottom: 0; }
+  .email-form { display: flex; gap: 8px; }
+  .email-form input { margin: 0 !important; font-family: 'IBM Plex Sans', sans-serif !important; }
+  .tool .email-form .btn, .email-form .btn { flex: 0 0 auto; padding: 0 22px; margin: 0; }
+  .email-form .btn:disabled { opacity: 0.6; cursor: default; }
+  .email-result { grid-column: 1 / -1; font-size: 15px; }
+  .email-result:empty { display: none; }
+  .email-result { padding: 16px 18px; border-radius: 10px; border: 1px solid transparent; }
+  .email-result p { margin: 6px 0 0; color: inherit; opacity: 0.9; }
+  .email-result.ok { background: rgba(61,220,151,0.10); color: #9af0c8; border-color: rgba(61,220,151,0.3); }
+  .email-result.bad { background: rgba(255,107,122,0.12); color: #ffb3bb; border-color: rgba(255,107,122,0.3); }
+  .email-result.err { background: rgba(255,200,87,0.10); color: var(--warn); border-color: rgba(255,200,87,0.3); }
+  .breach-list { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .breach-list li { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,107,122,0.35); color: var(--ice); padding: 4px 10px; border-radius: 6px; font-size: 13px; }
+  .fallback-link { display: inline-block; margin-top: 10px; font-weight: 600; color: var(--cyan); }
+  .email-sec .card { background: #0a0d14; border: 1px solid #1f2a3d; }
+  .email-sec .card input { background: #000; border-color: #263247; }
+  .email-sec .email-form input { flex: 1 1 auto; width: auto; min-width: 0; }
+  .email-sec .email-form .btn { width: auto; flex: 0 0 auto; padding: 14px 22px; margin: 0; }
+  @media (max-width: 900px) { .email-card { grid-template-columns: 1fr; } }
+  @media (max-width: 520px) { .email-form { flex-direction: column; } .email-sec .email-form .btn { width: 100%; } }
 
   /* Light sections */
   .light {
@@ -323,7 +365,7 @@
 <footer>
   <div class="wrap foot">
     <div>&copy; 2026 Password Strength Checker</div>
-    <div><a href="contact.html">Contact us</a>&nbsp;&nbsp;&nbsp;Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a></div>
+    <div><a href="contact.html">Contact us</a>&nbsp;&nbsp;&nbsp;Breach data from <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener">Have I Been Pwned</a> and <a href="https://xposedornot.com" target="_blank" rel="noopener">XposedOrNot</a>&nbsp;&nbsp;&nbsp;Passphrase words from the <a href="https://www.eff.org/dice" target="_blank" rel="noopener">EFF</a></div>
   </div>
 </footer>
 
